@@ -14,7 +14,7 @@
         <a href="index.html" style="text-decoration:none; color:#555;">Home</a>
         <a href="about.html" style="text-decoration:none; color:#555;">About</a>
         <a href="app.html" style="text-decoration:none; color:#111; font-weight:600;">Dashboard</a>
-        <button onclick="connectXero()" style="padding:10px 14px; background:#111; color:white; border:none; border-radius:8px; cursor:pointer;">
+        <button id="xeroButton" onclick="connectXero()" style="padding:10px 14px; background:#111; color:white; border:none; border-radius:8px; cursor:pointer;">
           Connect Xero
         </button>
       </div>
@@ -170,6 +170,8 @@
   </div>
 
   <script>
+    let isXeroConnected = false;
+
     let invoices = [
       { id: 1, client: "Acme Studio", number: "#1024", overdueDays: 14, amount: 2400, status: "overdue", selected: false },
       { id: 2, client: "Northway Media", number: "#1028", overdueDays: 9, amount: 3100, status: "overdue", selected: false },
@@ -182,8 +184,48 @@
 
     function connectXero() {
       const box = document.getElementById('xeroMessage');
+      const button = document.getElementById('xeroButton');
+
+      if (isXeroConnected) {
+        box.style.display = 'block';
+        box.style.background = '#e8f7ee';
+        box.innerText = "Xero is already connected. Live accounting data is loaded in demo mode.";
+        return;
+      }
+
       box.style.display = 'block';
-      box.innerText = "Demo mode: Xero connection coming soon. In the full product, Flow will pull unpaid invoices and cash data automatically.";
+      box.style.background = '#eef6ff';
+      box.innerText = "Connecting to Xero...";
+      button.innerText = "Connecting...";
+      button.disabled = true;
+      button.style.opacity = '0.7';
+      button.style.cursor = 'default';
+
+      setTimeout(() => {
+        isXeroConnected = true;
+
+        document.getElementById('cash').value = 4200;
+        document.getElementById('incoming').value = 5800;
+        document.getElementById('expenses').value = 6200;
+
+        invoices = [
+          { id: 1, client: "Acme Studio", number: "#1024", overdueDays: 14, amount: 2400, status: "overdue", selected: false },
+          { id: 2, client: "Northway Media", number: "#1028", overdueDays: 9, amount: 3100, status: "reminder_sent", selected: false },
+          { id: 3, client: "Bright Lane", number: "#1031", overdueDays: 6, amount: 2700, status: "overdue", selected: false },
+          { id: 4, client: "Oak & Co", number: "#1035", overdueDays: 4, amount: 1800, status: "overdue", selected: false }
+        ];
+
+        box.style.background = '#e8f7ee';
+        box.innerText = "Xero connected. Demo accounting data loaded successfully.";
+        button.innerText = "Xero connected";
+        button.style.background = '#00c853';
+        button.disabled = false;
+        button.style.opacity = '1';
+        button.style.cursor = 'pointer';
+
+        calculate();
+        updateAllSummaries();
+      }, 1400);
     }
 
     function loadExampleData() {
