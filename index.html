@@ -166,6 +166,58 @@
       </a>
     </div>
   </div>
+<div style="max-width:1200px; margin:0 auto; padding:0 24px 70px 24px;">
+  <div style="background:white; border-radius:22px; padding:34px; box-shadow:0 8px 24px rgba(16,24,40,0.06); text-align:center;">
+    <h2 style="margin:0 0 12px 0; font-size:34px;">Join the waitlist</h2>
+    <p style="margin:0 0 22px 0; color:#667085; font-size:18px;">
+      Get updates as Flow develops and be first to try new features.
+    </p>
 
+    <form onsubmit="joinWaitlist(event)" style="max-width:520px; margin:0 auto; display:grid; gap:12px;">
+      <input id="waitlistName" type="text" placeholder="Your name" style="padding:14px; border:1px solid #dbe2ea; border-radius:10px; font-size:16px;">
+      <input id="waitlistEmail" type="email" placeholder="Your email" style="padding:14px; border:1px solid #dbe2ea; border-radius:10px; font-size:16px;">
+      <input id="waitlistBusiness" type="text" placeholder="Business name (optional)" style="padding:14px; border:1px solid #dbe2ea; border-radius:10px; font-size:16px;">
+
+      <button type="submit" style="padding:14px 20px; background:#111; color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer;">
+        Join waitlist
+      </button>
+    </form>
+
+    <div id="waitlistMessage" style="display:none; margin-top:18px; padding:14px 16px; border-radius:12px; background:#e8f7ee; color:#1f5130; max-width:520px; margin-left:auto; margin-right:auto;"></div>
+  </div>
+</div>
+
+<script>
+  function joinWaitlist(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("waitlistName").value.trim();
+    const email = document.getElementById("waitlistEmail").value.trim();
+    const business = document.getElementById("waitlistBusiness").value.trim();
+    const message = document.getElementById("waitlistMessage");
+
+    if (!name || !email) {
+      message.style.display = "block";
+      message.style.background = "#fff4e5";
+      message.style.color = "#8a5b00";
+      message.innerText = "Please enter your name and email.";
+      return;
+    }
+
+    message.style.display = "block";
+    message.style.background = "#e8f7ee";
+    message.style.color = "#1f5130";
+    message.innerText =
+      "Thanks" +
+      (name ? ", " + name : "") +
+      ". You’re on the Flow waitlist" +
+      (business ? " from " + business : "") +
+      ".";
+
+    document.getElementById("waitlistName").value = "";
+    document.getElementById("waitlistEmail").value = "";
+    document.getElementById("waitlistBusiness").value = "";
+  }
+</script>
 </body>
 </html>
