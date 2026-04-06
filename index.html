@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,66 +6,164 @@
   <title>Flow</title>
 </head>
 
-<body style="margin:0; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f9fafb; color:#111;">
+<body style="margin:0; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f5f7fb; color:#111;">
 
-  <div style="background:white; border-bottom:1px solid #eee;">
-    <div style="max-width:1100px; margin:0 auto; padding:20px; display:flex; justify-content:space-between; align-items:center;">
+  <!-- Top Nav -->
+  <div style="background:white; border-bottom:1px solid #e9edf3;">
+    <div style="max-width:1200px; margin:0 auto; padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
       <div style="font-size:22px; font-weight:700;">Flow</div>
+      <div style="display:flex; gap:24px; align-items:center;">
+        <a href="index.html" style="text-decoration:none; color:#111; font-weight:600;">Home</a>
+        <a href="about.html" style="text-decoration:none; color:#555;">About</a>
+        <a href="app.html" style="text-decoration:none; color:#555;">Dashboard</a>
+        <a href="app.html" style="padding:10px 14px; background:#111; color:white; border-radius:8px; text-decoration:none;">
+          Open demo
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div style="max-width:1200px; margin:0 auto; padding:70px 24px 40px 24px;">
+    <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:36px; align-items:center;">
+
       <div>
-        <a href="index.html" style="margin-right:20px; text-decoration:none; color:#111;">Home</a>
-        <a href="about.html" style="margin-right:20px; text-decoration:none; color:#111;">About</a>
-        <a href="app.html" style="text-decoration:none; color:#111;">Demo</a>
+        <div style="display:inline-block; padding:8px 12px; background:white; border:1px solid #e9edf3; border-radius:999px; color:#555; font-size:14px; margin-bottom:18px;">
+          Cash flow visibility for small businesses
+        </div>
+
+        <h1 style="font-size:60px; line-height:1.05; margin:0 0 20px 0;">
+          Stay ahead of<br>cash flow problems
+        </h1>
+
+        <p style="font-size:21px; color:#667085; line-height:1.5; max-width:650px; margin:0 0 28px 0;">
+          Flow helps small businesses predict shortfalls, spot overdue invoices, and take action before cash becomes a problem.
+        </p>
+
+        <div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:24px;">
+          <a href="app.html" style="padding:14px 20px; background:#111; color:white; text-decoration:none; border-radius:10px; font-weight:600;">
+            Try the dashboard
+          </a>
+          <a href="about.html" style="padding:14px 20px; background:white; color:#111; text-decoration:none; border-radius:10px; border:1px solid #dbe2ea; font-weight:600;">
+            Learn more
+          </a>
+        </div>
+
+        <div style="display:flex; gap:20px; flex-wrap:wrap; color:#667085; font-size:15px;">
+          <div>Predict cash gaps</div>
+          <div>Chase overdue invoices</div>
+          <div>Take action early</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="background:white; border-radius:22px; padding:22px; box-shadow:0 14px 40px rgba(16,24,40,0.08);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+            <div>
+              <div style="font-size:13px; color:#667085; margin-bottom:6px;">Flow dashboard</div>
+              <div style="font-size:24px; font-weight:700;">Cash overview</div>
+            </div>
+            <div style="padding:8px 10px; background:#fff4e5; border-radius:999px; font-size:13px; font-weight:600;">
+              Warning
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;">
+            <div style="background:#f8fafc; border:1px solid #edf1f5; border-radius:14px; padding:16px;">
+              <div style="font-size:13px; color:#667085;">Cash runway</div>
+              <div style="font-size:28px; font-weight:700; margin-top:6px;">18 days</div>
+            </div>
+            <div style="background:#f8fafc; border:1px solid #edf1f5; border-radius:14px; padding:16px;">
+              <div style="font-size:13px; color:#667085;">Overdue invoices</div>
+              <div style="font-size:28px; font-weight:700; margin-top:6px;">£8,200</div>
+            </div>
+          </div>
+
+          <div style="padding:18px; background:#fff4e5; border-radius:14px; margin-bottom:14px;">
+            <div style="font-size:14px; color:#8a5b00; margin-bottom:8px;">Recommended action</div>
+            <div style="font-size:18px; font-weight:700; margin-bottom:6px;">Chase 3 overdue invoices</div>
+            <div style="color:#8a5b00;">Potential cash recovered: £8,200</div>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button style="padding:11px 14px; background:#00c853; color:white; border:none; border-radius:10px;">Send reminders</button>
+            <button style="padding:11px 14px; background:white; color:#111; border:1px solid #dbe2ea; border-radius:10px;">View invoices</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Feature cards -->
+  <div style="max-width:1200px; margin:0 auto; padding:20px 24px 40px 24px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:18px;">
+
+      <div style="background:white; border-radius:18px; padding:24px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+        <div style="font-size:18px; font-weight:700; margin-bottom:10px;">Predict cash gaps</div>
+        <div style="color:#667085; line-height:1.6;">
+          Estimate how long your cash will last and catch shortfalls before they hit.
+        </div>
+      </div>
+
+      <div style="background:white; border-radius:18px; padding:24px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+        <div style="font-size:18px; font-weight:700; margin-bottom:10px;">Spot overdue invoices</div>
+        <div style="color:#667085; line-height:1.6;">
+          See which payments are late, how much is stuck, and where to focus first.
+        </div>
+      </div>
+
+      <div style="background:white; border-radius:18px; padding:24px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+        <div style="font-size:18px; font-weight:700; margin-bottom:10px;">Take action early</div>
+        <div style="color:#667085; line-height:1.6;">
+          Turn warnings into action with reminders, cash checks, and a clearer next step.
+        </div>
       </div>
     </div>
   </div>
 
-  <div style="max-width:1100px; margin:0 auto; padding:90px 20px; text-align:center;">
-    <h1 style="font-size:56px; margin-bottom:20px;">
-      Stay ahead of cash flow problems
-    </h1>
-
-    <p style="font-size:22px; color:#555; max-width:750px; margin:0 auto 35px auto;">
-      Flow helps small businesses predict shortfalls, spot overdue invoices, and take action before cash becomes a problem.
-    </p>
-
-    <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
-      <a href="app.html" style="padding:14px 24px; background:#111; color:white; text-decoration:none; border-radius:8px;">
-        Try the demo
-      </a>
-      <a href="about.html" style="padding:14px 24px; background:white; color:#111; text-decoration:none; border-radius:8px; border:1px solid #ddd;">
-        Learn more
-      </a>
-    </div>
-
-    <div style="margin-top:70px; background:white; border-radius:16px; padding:35px; max-width:420px; margin-left:auto; margin-right:auto; box-shadow:0 10px 25px rgba(0,0,0,0.08); text-align:left;">
-      <div style="font-size:13px; color:#888; margin-bottom:10px;">⚠️ CASH ALERT</div>
-      <div style="font-size:24px; font-weight:700; margin-bottom:14px;">You’ll run out of cash in 18 days</div>
-      <div style="color:#555; margin-bottom:18px;">
-        Recommended action:<br>
-        Chase 3 overdue invoices (£8,200)
+  <!-- How it works -->
+  <div style="max-width:1200px; margin:0 auto; padding:20px 24px 60px 24px;">
+    <div style="background:white; border-radius:22px; padding:30px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+      <div style="margin-bottom:22px;">
+        <h2 style="margin:0; font-size:32px;">How Flow works</h2>
+        <p style="margin:10px 0 0 0; color:#667085; font-size:17px;">
+          A simple way to stay on top of business cash flow.
+        </p>
       </div>
-      <button style="padding:10px 16px; background:#00c853; color:white; border:none; border-radius:8px;">
-        Send reminders
-      </button>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px;">
+        <div style="padding:18px; border:1px solid #edf1f5; border-radius:16px; background:#fafbfd;">
+          <div style="font-size:13px; color:#667085; margin-bottom:8px;">Step 1</div>
+          <div style="font-weight:700; margin-bottom:8px;">Check your position</div>
+          <div style="color:#667085; line-height:1.6;">See your current cash, incoming money, and estimated runway.</div>
+        </div>
+
+        <div style="padding:18px; border:1px solid #edf1f5; border-radius:16px; background:#fafbfd;">
+          <div style="font-size:13px; color:#667085; margin-bottom:8px;">Step 2</div>
+          <div style="font-weight:700; margin-bottom:8px;">Spot the risk</div>
+          <div style="color:#667085; line-height:1.6;">Understand whether your cash position looks healthy, warning, or high risk.</div>
+        </div>
+
+        <div style="padding:18px; border:1px solid #edf1f5; border-radius:16px; background:#fafbfd;">
+          <div style="font-size:13px; color:#667085; margin-bottom:8px;">Step 3</div>
+          <div style="font-weight:700; margin-bottom:8px;">Take action</div>
+          <div style="color:#667085; line-height:1.6;">Chase overdue invoices and move faster before cash becomes a problem.</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div style="max-width:1100px; margin:0 auto; padding:20px 20px 90px 20px;">
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:20px;">
-      <div style="background:white; border-radius:14px; padding:25px; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
-        <h3 style="margin-top:0;">Predict cash gaps</h3>
-        <p style="color:#666; margin-bottom:0;">See when cash could get tight before it becomes a surprise.</p>
-      </div>
-
-      <div style="background:white; border-radius:14px; padding:25px; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
-        <h3 style="margin-top:0;">Spot overdue invoices</h3>
-        <p style="color:#666; margin-bottom:0;">Know which customers are late and how much cash is stuck.</p>
-      </div>
-
-      <div style="background:white; border-radius:14px; padding:25px; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
-        <h3 style="margin-top:0;">Take action fast</h3>
-        <p style="color:#666; margin-bottom:0;">Send reminders and act early instead of reacting too late.</p>
-      </div>
+  <!-- Final CTA -->
+  <div style="max-width:1200px; margin:0 auto; padding:0 24px 70px 24px;">
+    <div style="background:#111; color:white; border-radius:22px; padding:34px; text-align:center;">
+      <h2 style="margin:0 0 12px 0; font-size:34px;">See Flow in action</h2>
+      <p style="margin:0 0 22px 0; color:#d0d5dd; font-size:18px;">
+        Explore the demo dashboard and see how Flow helps businesses stay ahead of cash flow problems.
+      </p>
+      <a href="app.html" style="display:inline-block; padding:14px 20px; background:white; color:#111; text-decoration:none; border-radius:10px; font-weight:700;">
+        Open dashboard
+      </a>
     </div>
   </div>
 
