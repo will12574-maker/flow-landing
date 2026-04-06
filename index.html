@@ -68,6 +68,23 @@
     </div>
 
   </div>
+<script>
+function calculate() {
+  const cash = parseFloat(document.getElementById('cash').value) || 0;
+  const incoming = parseFloat(document.getElementById('incoming').value) || 0;
+  const expenses = parseFloat(document.getElementById('expenses').value) || 0;
 
+  const total = cash + incoming;
+  const days = (total / expenses) * 30;
+
+  if (expenses === 0) {
+    document.getElementById('result').innerText = "Enter expenses";
+    return;
+  }
+
+  document.getElementById('result').innerText =
+    "You will run out of cash in " + Math.round(days) + " days";
+}
+</script>
 </body>
 </html>
