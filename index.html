@@ -29,6 +29,7 @@
       Get early access
     </button>
 
+    <!-- ALERT BOX -->
     <div style="
       margin-top:60px;
       background:white;
@@ -67,24 +68,56 @@
 
     </div>
 
+    <!-- NEW TOOL -->
+    <div style="margin-top:80px; text-align:center;">
+
+      <h2 style="margin-bottom:20px;">Check your cash flow</h2>
+
+      <input id="cash" placeholder="Current cash (£)" style="margin:5px; padding:10px; width:200px;">
+      <br>
+
+      <input id="incoming" placeholder="Expected incoming (£)" style="margin:5px; padding:10px; width:200px;">
+      <br>
+
+      <input id="expenses" placeholder="Monthly expenses (£)" style="margin:5px; padding:10px; width:200px;">
+      <br>
+
+      <button onclick="calculate()" style="
+        margin-top:15px;
+        padding:12px 20px;
+        background:#111;
+        color:white;
+        border:none;
+        border-radius:6px;
+        cursor:pointer;
+      ">
+        Check my cash flow
+      </button>
+
+      <p id="result" style="margin-top:20px; font-size:18px; font-weight:bold;"></p>
+
+    </div>
+
   </div>
-<script>
-function calculate() {
-  const cash = parseFloat(document.getElementById('cash').value) || 0;
-  const incoming = parseFloat(document.getElementById('incoming').value) || 0;
-  const expenses = parseFloat(document.getElementById('expenses').value) || 0;
 
-  const total = cash + incoming;
-  const days = (total / expenses) * 30;
+  <script>
+  function calculate() {
+    const cash = parseFloat(document.getElementById('cash').value) || 0;
+    const incoming = parseFloat(document.getElementById('incoming').value) || 0;
+    const expenses = parseFloat(document.getElementById('expenses').value) || 0;
 
-  if (expenses === 0) {
-    document.getElementById('result').innerText = "Enter expenses";
-    return;
+    if (expenses === 0) {
+      document.getElementById('result').innerText = "Please enter your expenses";
+      return;
+    }
+
+    const total = cash + incoming;
+    const days = (total / expenses) * 30;
+
+    document.getElementById('result').innerText =
+      "You will run out of cash in " + Math.round(days) + " days";
   }
+  </script>
 
-  document.getElementById('result').innerText =
-    "You will run out of cash in " + Math.round(days) + " days";
-}
-</script>
 </body>
 </html>
