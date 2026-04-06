@@ -21,9 +21,34 @@
   <div style="max-width:950px; margin:0 auto; padding:80px 20px; text-align:center;">
 
     <h1 style="font-size:48px; margin-bottom:15px;">Flow demo</h1>
-    <p style="font-size:20px; color:#555; margin-bottom:40px;">
-      Test your cash position and see which invoices need chasing.
+    <p style="font-size:20px; color:#555; margin-bottom:20px;">
+      Test your cash position and take action on overdue invoices.
     </p>
+
+    <div style="margin-bottom:40px;">
+      <button onclick="connectXero()" style="
+        padding:12px 18px;
+        background:#111;
+        color:white;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        font-size:15px;
+      ">
+        Connect to Xero
+      </button>
+
+      <div id="xeroMessage" style="
+        display:none;
+        max-width:520px;
+        margin:15px auto 0 auto;
+        padding:14px 16px;
+        border-radius:10px;
+        background:#eef7ff;
+        color:#234;
+        text-align:left;
+      "></div>
+    </div>
 
     <div style="
       background:white;
@@ -80,7 +105,7 @@
       background:white;
       border-radius:12px;
       padding:35px;
-      max-width:700px;
+      max-width:760px;
       margin-left:auto;
       margin-right:auto;
       box-shadow:0 10px 25px rgba(0,0,0,0.08);
@@ -89,35 +114,44 @@
 
       <h2 style="margin-top:0; margin-bottom:10px;">Overdue invoices</h2>
       <p style="color:#666; margin-top:0; margin-bottom:25px;">
-        These invoices may need chasing.
+        Select invoices to chase.
       </p>
 
       <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid #eee;">
-        <div>
-          <div style="font-weight:600;">Acme Studio</div>
-          <div style="font-size:14px; color:#777;">Invoice #1024 • 14 days overdue</div>
-        </div>
+        <label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; flex:1;">
+          <input type="checkbox" class="invoice-check" value="2400">
+          <div>
+            <div style="font-weight:600;">Acme Studio</div>
+            <div style="font-size:14px; color:#777;">Invoice #1024 • 14 days overdue</div>
+          </div>
+        </label>
         <div style="font-weight:600;">£2,400</div>
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid #eee;">
-        <div>
-          <div style="font-weight:600;">Northway Media</div>
-          <div style="font-size:14px; color:#777;">Invoice #1028 • 9 days overdue</div>
-        </div>
+        <label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; flex:1;">
+          <input type="checkbox" class="invoice-check" value="3100">
+          <div>
+            <div style="font-weight:600;">Northway Media</div>
+            <div style="font-size:14px; color:#777;">Invoice #1028 • 9 days overdue</div>
+          </div>
+        </label>
         <div style="font-weight:600;">£3,100</div>
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0;">
-        <div>
-          <div style="font-weight:600;">Bright Lane</div>
-          <div style="font-size:14px; color:#777;">Invoice #1031 • 6 days overdue</div>
-        </div>
+        <label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; flex:1;">
+          <input type="checkbox" class="invoice-check" value="2700">
+          <div>
+            <div style="font-weight:600;">Bright Lane</div>
+            <div style="font-size:14px; color:#777;">Invoice #1031 • 6 days overdue</div>
+          </div>
+        </label>
         <div style="font-weight:600;">£2,700</div>
       </div>
 
       <div style="margin-top:25px; display:flex; gap:12px; flex-wrap:wrap;">
-        <button onclick="sendReminders()" style="
+        <button onclick="sendSelectedReminders()" style="
           padding:12px 18px;
           background:#00c853;
           color:white;
@@ -126,10 +160,10 @@
           cursor:pointer;
           font-size:15px;
         ">
-          Send reminders
+          Send reminders to selected
         </button>
 
-        <button onclick="showTotal()" style="
+        <button onclick="showSelectedTotal()" style="
           padding:12px 18px;
           background:#111;
           color:white;
@@ -138,7 +172,31 @@
           cursor:pointer;
           font-size:15px;
         ">
-          Show total overdue
+          Show selected total
+        </button>
+
+        <button onclick="selectAllInvoices()" style="
+          padding:12px 18px;
+          background:white;
+          color:#111;
+          border:1px solid #ddd;
+          border-radius:8px;
+          cursor:pointer;
+          font-size:15px;
+        ">
+          Select all
+        </button>
+
+        <button onclick="clearInvoices()" style="
+          padding:12px 18px;
+          background:white;
+          color:#111;
+          border:1px solid #ddd;
+          border-radius:8px;
+          cursor:pointer;
+          font-size:15px;
+        ">
+          Clear selection
         </button>
       </div>
 
@@ -196,18 +254,83 @@
       }
     }
 
-    function sendReminders() {
-      const box = document.getElementById('invoiceMessage');
-      box.style.display = 'block';
-      box.style.background = '#e8f7ee';
-      box.innerText = "3 reminder emails sent. Potential cash recovered: £8,200.";
+    function getSelectedInvoices() {
+      const checks = document.querySelectorAll('.invoice-check:checked');
+      let total = 0;
+      let count = 0;
+
+      checks.forEach((check) => {
+        total += parseFloat(check.value);
+        count += 1;
+      });
+
+      return { total, count };
     }
 
-    function showTotal() {
+    function formatMoney(amount) {
+      return "£" + amount.toLocaleString();
+    }
+
+    function sendSelectedReminders() {
+      const box = document.getElementById('invoiceMessage');
+      const selected = getSelectedInvoices();
+
+      box.style.display = 'block';
+
+      if (selected.count === 0) {
+        box.style.background = '#fff4e5';
+        box.innerText = "No invoices selected yet.";
+        return;
+      }
+
+      box.style.background = '#e8f7ee';
+      box.innerText = selected.count + " reminder email(s) sent. Potential cash recovered: " + formatMoney(selected.total) + ".";
+    }
+
+    function showSelectedTotal() {
+      const box = document.getElementById('invoiceMessage');
+      const selected = getSelectedInvoices();
+
+      box.style.display = 'block';
+
+      if (selected.count === 0) {
+        box.style.background = '#fff4e5';
+        box.innerText = "No invoices selected yet.";
+        return;
+      }
+
+      box.style.background = '#eef7ff';
+      box.innerText = "Selected invoices: " + selected.count + ". Total value: " + formatMoney(selected.total) + ".";
+    }
+
+    function selectAllInvoices() {
+      const checks = document.querySelectorAll('.invoice-check');
+      checks.forEach((check) => {
+        check.checked = true;
+      });
+
+      const box = document.getElementById('invoiceMessage');
+      box.style.display = 'block';
+      box.style.background = '#eef7ff';
+      box.innerText = "All overdue invoices selected.";
+    }
+
+    function clearInvoices() {
+      const checks = document.querySelectorAll('.invoice-check');
+      checks.forEach((check) => {
+        check.checked = false;
+      });
+
       const box = document.getElementById('invoiceMessage');
       box.style.display = 'block';
       box.style.background = '#fff4e5';
-      box.innerText = "Total overdue invoices: £8,200.";
+      box.innerText = "Invoice selection cleared.";
+    }
+
+    function connectXero() {
+      const box = document.getElementById('xeroMessage');
+      box.style.display = 'block';
+      box.innerText = "Demo mode: Xero connection coming soon. In the full product, Flow will pull unpaid invoices and cash data automatically.";
     }
   </script>
 
