@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Flow Demo</title>
+</head>
+
+<body style="margin:0; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f9fafb; color:#111;">
+
+  <div style="background:white; border-bottom:1px solid #eee;">
+    <div style="max-width:1100px; margin:0 auto; padding:20px; display:flex; justify-content:space-between; align-items:center;">
+      <div style="font-size:22px; font-weight:700;">Flow</div>
+      <div>
+        <a href="index.html" style="margin-right:20px; text-decoration:none; color:#111;">Home</a>
+        <a href="about.html" style="margin-right:20px; text-decoration:none; color:#111;">About</a>
+        <a href="app.html" style="text-decoration:none; color:#111;">Demo</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:950px; margin:0 auto; padding:80px 20px; text-align:center;">
+
+    <h1 style="font-size:48px; margin-bottom:15px;">Flow demo</h1>
+    <p style="font-size:20px; color:#555; margin-bottom:40px;">
+      Test your cash position and see which invoices need chasing.
+    </p>
+
+    <div style="
+      background:white;
+      border-radius:12px;
+      padding:35px;
+      max-width:520px;
+      margin-left:auto;
+      margin-right:auto;
+      box-shadow:0 10px 25px rgba(0,0,0,0.08);
+      text-align:center;
+    ">
+
+      <h2 style="margin-bottom:20px;">Check your cash flow</h2>
+
+      <input id="cash" type="number" placeholder="Current cash (£)" style="margin:8px 0; padding:12px; width:80%; border:1px solid #ddd; border-radius:8px;">
+      <br>
+
+      <input id="incoming" type="number" placeholder="Expected incoming this month (£)" style="margin:8px 0; padding:12px; width:80%; border:1px solid #ddd; border-radius:8px;">
+      <br>
+
+      <input id="expenses" type="number" placeholder="Monthly expenses (£)" style="margin:8px 0; padding:12px; width:80%; border:1px solid #ddd; border-radius:8px;">
+      <br>
+
+      <button onclick="calculate()" style="
+        margin-top:15px;
+        padding:12px 20px;
+        background:#111;
+        color:white;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        font-size:15px;
+      ">
+        Check my cash flow
+      </button>
+
+      <div id="resultBox" style="
+        margin-top:25px;
+        display:none;
+        text-align:left;
+        padding:20px;
+        border-radius:10px;
+        background:#f4f6f8;
+      ">
+        <p id="result" style="margin:0 0 10px 0; font-size:20px; font-weight:bold;"></p>
+        <p id="status" style="margin:0 0 10px 0; font-weight:600;"></p>
+        <p id="advice" style="margin:0;"></p>
+      </div>
+
+    </div>
+
+    <div style="
+      margin-top:80px;
+      background:white;
+      border-radius:12px;
+      padding:35px;
+      max-width:700px;
+      margin-left:auto;
+      margin-right:auto;
+      box-shadow:0 10px 25px rgba(0,0,0,0.08);
+      text-align:left;
+    ">
+
+      <h2 style="margin-top:0; margin-bottom:10px;">Overdue invoices</h2>
+      <p style="color:#666; margin-top:0; margin-bottom:25px;">
+        These invoices may need chasing.
+      </p>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid #eee;">
+        <div>
+          <div style="font-weight:600;">Acme Studio</div>
+          <div style="font-size:14px; color:#777;">Invoice #1024 • 14 days overdue</div>
+        </div>
+        <div style="font-weight:600;">£2,400</div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid #eee;">
+        <div>
+          <div style="font-weight:600;">Northway Media</div>
+          <div style="font-size:14px; color:#777;">Invoice #1028 • 9 days overdue</div>
+        </div>
+        <div style="font-weight:600;">£3,100</div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0;">
+        <div>
+          <div style="font-weight:600;">Bright Lane</div>
+          <div style="font-size:14px; color:#777;">Invoice #1031 • 6 days overdue</div>
+        </div>
+        <div style="font-weight:600;">£2,700</div>
+      </div>
+
+      <div style="margin-top:25px; display:flex; gap:12px; flex-wrap:wrap;">
+        <button onclick="sendReminders()" style="
+          padding:12px 18px;
+          background:#00c853;
+          color:white;
+          border:none;
+          border-radius:8px;
+          cursor:pointer;
+          font-size:15px;
+        ">
+          Send reminders
+        </button>
+
+        <button onclick="showTotal()" style="
+          padding:12px 18px;
+          background:#111;
+          color:white;
+          border:none;
+          border-radius:8px;
+          cursor:pointer;
+          font-size:15px;
+        ">
+          Show total overdue
+        </button>
+      </div>
+
+      <div id="invoiceMessage" style="
+        display:none;
+        margin-top:20px;
+        padding:16px;
+        border-radius:10px;
+        background:#eef7ff;
+        color:#234;
+      "></div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function calculate() {
+      const cash = parseFloat(document.getElementById('cash').value) || 0;
+      const incoming = parseFloat(document.getElementById('incoming').value) || 0;
+      const expenses = parseFloat(document.getElementById('expenses').value) || 0;
+
+      const resultBox = document.getElementById('resultBox');
+      const result = document.getElementById('result');
+      const status = document.getElementById('status');
+      const advice = document.getElementById('advice');
+
+      if (expenses <= 0) {
+        resultBox.style.display = 'block';
+        resultBox.style.background = '#fff4e5';
+        result.innerText = "Please enter your monthly expenses";
+        status.innerText = "";
+        advice.innerText = "";
+        return;
+      }
+
+      const total = cash + incoming;
+      const days = Math.round((total / expenses) * 30);
+
+      resultBox.style.display = 'block';
+      result.innerText = "You will run out of cash in " + days + " days";
+
+      if (days <= 14) {
+        resultBox.style.background = '#ffe5e5';
+        status.innerText = "High risk";
+        advice.innerText = "You may need to act now. Chase overdue invoices, reduce non-essential spending, and review upcoming payments.";
+      } else if (days <= 30) {
+        resultBox.style.background = '#fff4e5';
+        status.innerText = "Warning";
+        advice.innerText = "You should keep a close eye on cash. Consider chasing invoices and reducing flexible costs this month.";
+      } else {
+        resultBox.style.background = '#e8f7ee';
+        status.innerText = "Healthy";
+        advice.innerText = "Your current position looks okay for now. Keep monitoring invoices and stay ahead of future shortfalls.";
+      }
+    }
+
+    function sendReminders() {
+      const box = document.getElementById('invoiceMessage');
+      box.style.display = 'block';
+      box.style.background = '#e8f7ee';
+      box.innerText = "3 reminder emails sent. Potential cash recovered: £8,200.";
+    }
+
+    function showTotal() {
+      const box = document.getElementById('invoiceMessage');
+      box.style.display = 'block';
+      box.style.background = '#fff4e5';
+      box.innerText = "Total overdue invoices: £8,200.";
+    }
+  </script>
+
+</body>
+</html>
