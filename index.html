@@ -29,7 +29,6 @@
       Get early access
     </button>
 
-    <!-- ALERT BOX -->
     <div style="
       margin-top:60px;
       background:white;
@@ -41,7 +40,6 @@
       box-shadow:0 10px 25px rgba(0,0,0,0.08);
       text-align:left;
     ">
-
       <div style="font-size:14px; color:#999; margin-bottom:10px;">
         ⚠️ ALERT
       </div>
@@ -65,21 +63,29 @@
       ">
         Send reminders
       </button>
-
     </div>
 
-    <!-- NEW TOOL -->
-    <div style="margin-top:80px; text-align:center;">
+    <div style="
+      margin-top:80px;
+      background:white;
+      border-radius:12px;
+      padding:35px;
+      max-width:500px;
+      margin-left:auto;
+      margin-right:auto;
+      box-shadow:0 10px 25px rgba(0,0,0,0.08);
+      text-align:center;
+    ">
 
       <h2 style="margin-bottom:20px;">Check your cash flow</h2>
 
-      <input id="cash" placeholder="Current cash (£)" style="margin:5px; padding:10px; width:200px;">
+      <input id="cash" type="number" placeholder="Current cash (£)" style="margin:8px 0; padding:12px; width:80%; border:1px solid #ddd; border-radius:8px;">
       <br>
 
-      <input id="incoming" placeholder="Expected incoming (£)" style="margin:5px; padding:10px; width:200px;">
+      <input id="incoming" type="number" placeholder="Expected incoming this month (£)" style="margin:8px 0; padding:12px; width:80%; border:1px solid #ddd; border-radius:8px;">
       <br>
 
-      <input id="expenses" placeholder="Monthly expenses (£)" style="margin:5px; padding:10px; width:200px;">
+      <input id="expenses" type="number" placeholder="Monthly expenses (£)" style="margin:8px 0; padding:12px; width:80%; border:1px solid #ddd; border-radius:8px;">
       <br>
 
       <button onclick="calculate()" style="
@@ -88,35 +94,70 @@
         background:#111;
         color:white;
         border:none;
-        border-radius:6px;
+        border-radius:8px;
         cursor:pointer;
+        font-size:15px;
       ">
         Check my cash flow
       </button>
 
-      <p id="result" style="margin-top:20px; font-size:18px; font-weight:bold;"></p>
+      <div id="resultBox" style="
+        margin-top:25px;
+        display:none;
+        text-align:left;
+        padding:20px;
+        border-radius:10px;
+        background:#f4f6f8;
+      ">
+        <p id="result" style="margin:0 0 10px 0; font-size:20px; font-weight:bold;"></p>
+        <p id="status" style="margin:0 0 10px 0; font-weight:600;"></p>
+        <p id="advice" style="margin:0; color:#555;"></p>
+      </div>
 
     </div>
 
   </div>
 
   <script>
-  function calculate() {
-    const cash = parseFloat(document.getElementById('cash').value) || 0;
-    const incoming = parseFloat(document.getElementById('incoming').value) || 0;
-    const expenses = parseFloat(document.getElementById('expenses').value) || 0;
+    function calculate() {
+      const cash = parseFloat(document.getElementById('cash').value) || 0;
+      const incoming = parseFloat(document.getElementById('incoming').value) || 0;
+      const expenses = parseFloat(document.getElementById('expenses').value) || 0;
 
-    if (expenses === 0) {
-      document.getElementById('result').innerText = "Please enter your expenses";
-      return;
+      const resultBox = document.getElementById('resultBox');
+      const result = document.getElementById('result');
+      const status = document.getElementById('status');
+      const advice = document.getElementById('advice');
+
+      if (expenses <= 0) {
+        resultBox.style.display = 'block';
+        resultBox.style.background = '#fff4e5';
+        result.innerText = "Please enter your monthly expenses";
+        status.innerText = "";
+        advice.innerText = "";
+        return;
+      }
+
+      const total = cash + incoming;
+      const days = Math.round((total / expenses) * 30);
+
+      resultBox.style.display = 'block';
+      result.innerText = "You will run out of cash in " + days + " days";
+
+      if (days <= 14) {
+        resultBox.style.background = '#ffe5e5';
+        status.innerText = "High risk";
+        advice.innerText = "You may need to act now. Chase overdue invoices, delay non-essential spending, and review upcoming payments immediately.";
+      } else if (days <= 30) {
+        resultBox.style.background = '#fff4e5';
+        status.innerText = "Warning";
+        advice.innerText = "You should keep a close eye on cash. Consider chasing invoices and reducing flexible costs this month.";
+      } else {
+        resultBox.style.background = '#e8f7ee';
+        status.innerText = "Healthy";
+        advice.innerText = "Your current position looks okay for now. Keep monitoring invoices and stay ahead of future shortfalls.";
+      }
     }
-
-    const total = cash + incoming;
-    const days = (total / expenses) * 30;
-
-    document.getElementById('result').innerText =
-      "You will run out of cash in " + Math.round(days) + " days";
-  }
   </script>
 
 </body>
