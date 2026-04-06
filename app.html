@@ -14,7 +14,7 @@
       color: #0F172A;
     }
     .container {
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
       padding: 0 24px;
     }
@@ -28,10 +28,17 @@
     .nav-inner {
       min-height: 76px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 20px;
       flex-wrap: wrap;
+    }
+    .brand {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #0F172A;
+      text-decoration: none;
     }
     .nav-links {
       display: flex;
@@ -118,7 +125,7 @@
     }
     .main-grid {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1.05fr 0.95fr;
       gap: 24px;
     }
     .column {
@@ -180,7 +187,7 @@
       line-height: 1.7;
       font-size: 14px;
     }
-    .invoice-list, .activity-list, .action-list {
+    .invoice-list, .action-list {
       display: grid;
       gap: 12px;
     }
@@ -223,6 +230,12 @@
       gap: 12px;
     }
     .snapshot-row:last-child { border-bottom: none; }
+    .helper-note {
+      margin-top: 14px;
+      color: #667085;
+      font-size: 13px;
+      line-height: 1.5;
+    }
     .footer {
       padding: 30px 0 50px;
       color: #667085;
@@ -251,14 +264,7 @@
   <div class="nav">
     <div class="container">
       <div class="nav-inner">
-        <a href="index.html" style="text-decoration:none;">
-          <svg width="150" height="40" viewBox="0 0 150 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Flow logo">
-            <path d="M20 33V19c0-3.6 2.9-6.5 6.5-6.5H32c3.2 0 5.8-2.6 5.8-5.8V4.5c0-.8-.7-1.5-1.5-1.5H24.8C16.1 3 9 10.1 9 18.8V33c0 1.1.9 2 2 2h7c1.1 0 2-.9 2-2Z" fill="#0F172A"/>
-            <path d="M12 11V8.8C12 5.1 15.1 2 18.8 2H36c1.1 0 2 .9 2 2V4.4c0 3.7-3.1 6.8-6.8 6.8H20c-4.4 0-8 3.6-8 8 0 1.1.9 2 2 2h4.3c1.1 0 2-.9 2-2v-.2c0-3.7 3.1-6.8 6.8-6.8h2.7c5.7 0 10.2-4.6 10.2-10.2V4c0-2.2-1.8-4-4-4H18.8C12.8 0 8 4.8 8 10.8V11c0 1.1.9 2 2 2Z" fill="#0F172A"/>
-            <rect x="36" y="2" width="6" height="6" rx="2" fill="#22C55E"/>
-            <text x="52" y="28" fill="#0F172A" font-size="24" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700">Flow</text>
-          </svg>
-        </a>
+        <a href="index.html" class="brand">Flow</a>
 
         <div class="nav-links">
           <a href="index.html">Home</a>
@@ -343,24 +349,21 @@
         <div class="column">
           <div class="card">
             <h2>Overdue invoices</h2>
-            <p class="card-sub">Select invoices to chase, follow up, or mark as paid.</p>
+            <p class="card-sub">Select invoices to chase, draft reminder emails, or mark as paid.</p>
             <div id="invoiceList" class="invoice-list"></div>
 
             <div class="button-row">
-              <button onclick="sendSelectedReminders()" class="btn btn-green">Send reminders</button>
-              <button onclick="sendFollowUp()" class="btn btn-dark">Send follow-up</button>
+              <button onclick="draftSelectedReminders()" class="btn btn-green">Email reminders</button>
               <button onclick="markSelectedPaid()" class="btn btn-light">Mark as paid</button>
               <button onclick="selectAllInvoices()" class="btn btn-light">Select all</button>
               <button onclick="clearInvoices()" class="btn btn-light">Clear</button>
             </div>
 
             <div id="invoiceMessage" class="message" style="margin-bottom:0;"></div>
-          </div>
 
-          <div class="card">
-            <h2>Recent activity</h2>
-            <p class="card-sub">Latest actions taken in Flow.</p>
-            <div id="activityList" class="activity-list"></div>
+            <div class="helper-note">
+              This opens a drafted email in your default mail app. Fully automated reminder sending would need a backend or email service.
+            </div>
           </div>
 
           <div class="card">
@@ -395,24 +398,15 @@
 
   <script>
     let isXeroConnected = false;
-    let activityLog = [
-      { text: "Dashboard ready for review", time: "Just now" }
-    ];
 
     let invoices = [
-      { id: 1, client: "Acme Studio", number: "#1024", overdueDays: 14, amount: 2400, status: "overdue", selected: false },
-      { id: 2, client: "Northway Media", number: "#1028", overdueDays: 9, amount: 3100, status: "overdue", selected: false },
-      { id: 3, client: "Bright Lane", number: "#1031", overdueDays: 6, amount: 2700, status: "overdue", selected: false }
+      { id: 1, client: "Acme Studio", email: "accounts@acmestudio.co", number: "#1024", overdueDays: 14, amount: 2400, status: "overdue", selected: false },
+      { id: 2, client: "Northway Media", email: "finance@northwaymedia.co", number: "#1028", overdueDays: 9, amount: 3100, status: "overdue", selected: false },
+      { id: 3, client: "Bright Lane", email: "accounts@brightlane.co", number: "#1031", overdueDays: 6, amount: 2700, status: "overdue", selected: false }
     ];
 
     function formatMoney(amount) {
       return "£" + Number(amount).toLocaleString();
-    }
-
-    function addActivity(text) {
-      activityLog.unshift({ text, time: "Just now" });
-      activityLog = activityLog.slice(0, 6);
-      renderActivity();
     }
 
     function showTopMessage(text, bg) {
@@ -429,27 +423,11 @@
       box.innerText = text;
     }
 
-    function renderActivity() {
-      const list = document.getElementById("activityList");
-      if (!activityLog.length) {
-        list.innerHTML = `<div class="mini-card" style="color:#667085;">No recent activity yet.</div>`;
-        return;
-      }
-
-      list.innerHTML = activityLog.map(item => `
-        <div class="mini-card">
-          <div style="font-weight:600; margin-bottom:6px;">${item.text}</div>
-          <div style="font-size:13px; color:#667085;">${item.time}</div>
-        </div>
-      `).join("");
-    }
-
     function connectXero() {
       const button = document.getElementById("xeroButton");
 
       if (isXeroConnected) {
-        showTopMessage("Xero is already connected. Live accounting data is loaded in demo mode.", "#E8F7EE");
-        addActivity("Checked Xero connection");
+        showTopMessage("Xero is already connected. Demo accounting data is loaded.", "#E8F7EE");
         return;
       }
 
@@ -465,10 +443,10 @@
         document.getElementById("expenses").value = 6200;
 
         invoices = [
-          { id: 1, client: "Acme Studio", number: "#1024", overdueDays: 14, amount: 2400, status: "overdue", selected: false },
-          { id: 2, client: "Northway Media", number: "#1028", overdueDays: 9, amount: 3100, status: "reminder_sent", selected: false },
-          { id: 3, client: "Bright Lane", number: "#1031", overdueDays: 6, amount: 2700, status: "overdue", selected: false },
-          { id: 4, client: "Oak & Co", number: "#1035", overdueDays: 4, amount: 1800, status: "overdue", selected: false }
+          { id: 1, client: "Acme Studio", email: "accounts@acmestudio.co", number: "#1024", overdueDays: 14, amount: 2400, status: "overdue", selected: false },
+          { id: 2, client: "Northway Media", email: "finance@northwaymedia.co", number: "#1028", overdueDays: 9, amount: 3100, status: "overdue", selected: false },
+          { id: 3, client: "Bright Lane", email: "accounts@brightlane.co", number: "#1031", overdueDays: 6, amount: 2700, status: "overdue", selected: false },
+          { id: 4, client: "Oak & Co", email: "hello@oakandco.co", number: "#1035", overdueDays: 4, amount: 1800, status: "overdue", selected: false }
         ];
 
         button.innerText = "Xero connected";
@@ -478,8 +456,7 @@
         showTopMessage("Xero connected. Demo accounting data loaded successfully.", "#E8F7EE");
         calculate();
         updateAllSummaries();
-        addActivity("Connected Xero and loaded demo accounting data");
-      }, 1400);
+      }, 1200);
     }
 
     function loadExampleData() {
@@ -487,14 +464,26 @@
       document.getElementById("incoming").value = 3000;
       document.getElementById("expenses").value = 4000;
       calculate();
-      addActivity("Loaded example cash flow data");
+    }
+
+    function getActiveInvoices() {
+      return invoices.filter(invoice => invoice.status !== "paid");
+    }
+
+    function getSelectedInvoices() {
+      return invoices.filter(invoice => invoice.selected && invoice.status !== "paid");
+    }
+
+    function getOverdueTotal() {
+      return getActiveInvoices().reduce((sum, invoice) => sum + invoice.amount, 0);
     }
 
     function updateNextAction(days) {
       const title = document.getElementById("nextActionTitle");
       const text = document.getElementById("nextActionText");
 
-      const overdueCount = getActiveInvoices().length;
+      const activeInvoices = getActiveInvoices();
+      const selectedInvoices = getSelectedInvoices();
       const overdueTotal = getOverdueTotal();
 
       if (!days) {
@@ -503,16 +492,27 @@
         return;
       }
 
-      if (days <= 14) {
+      if (days <= 14 && activeInvoices.length > 0) {
         title.innerText = "Urgent: chase overdue invoices";
-        text.innerText = overdueCount + " invoices are overdue worth " + formatMoney(overdueTotal) + ". Recovering this cash could extend your runway.";
-      } else if (days <= 30) {
+        text.innerText = activeInvoices.length + " invoices are overdue worth " + formatMoney(overdueTotal) + ". Recovering this cash could extend your runway.";
+        return;
+      }
+
+      if (selectedInvoices.length > 0) {
+        const selectedTotal = selectedInvoices.reduce((sum, invoice) => sum + invoice.amount, 0);
+        title.innerText = "You’ve selected invoices to chase";
+        text.innerText = selectedInvoices.length + " selected invoice(s) worth " + formatMoney(selectedTotal) + ". Draft reminder emails now.";
+        return;
+      }
+
+      if (days <= 30) {
         title.innerText = "Keep a close eye on cash";
         text.innerText = "You have around " + days + " days of runway. Chasing overdue invoices now will reduce risk.";
-      } else {
-        title.innerText = "You're in a healthy position";
-        text.innerText = "Your cash looks stable. Stay on top of invoices to keep it that way.";
+        return;
       }
+
+      title.innerText = "You're in a healthy position";
+      text.innerText = "Your cash looks stable. Stay on top of invoices to keep it that way.";
     }
 
     function calculate() {
@@ -578,18 +578,6 @@
       updateNextAction(days);
     }
 
-    function getActiveInvoices() {
-      return invoices.filter(invoice => invoice.status !== "paid");
-    }
-
-    function getSelectedInvoices() {
-      return invoices.filter(invoice => invoice.selected && invoice.status !== "paid");
-    }
-
-    function getOverdueTotal() {
-      return getActiveInvoices().reduce((sum, invoice) => sum + invoice.amount, 0);
-    }
-
     function renderInvoices() {
       const list = document.getElementById("invoiceList");
       list.innerHTML = "";
@@ -611,16 +599,10 @@
         let badgeBg = "#FFF4E5";
         let badgeColor = "#8A5B00";
 
-        if (invoice.status === "reminder_sent") {
-          badgeText = "Reminder sent";
+        if (invoice.status === "reminder_drafted") {
+          badgeText = "Reminder drafted";
           badgeBg = "#EEF6FF";
           badgeColor = "#234";
-        }
-
-        if (invoice.status === "follow_up_sent") {
-          badgeText = "Follow-up sent";
-          badgeBg = "#F3E8FF";
-          badgeColor = "#5B2A86";
         }
 
         list.innerHTML += `
@@ -646,6 +628,9 @@
         invoice.id === id ? { ...invoice, selected: !invoice.selected } : invoice
       );
       updateAllSummaries();
+      const runwayText = document.getElementById("summaryRunway").innerText;
+      const days = parseInt(runwayText, 10);
+      if (!isNaN(days)) updateNextAction(days);
     }
 
     function updateSelectedSummary() {
@@ -666,8 +651,7 @@
 
     function updateActionCentre() {
       const active = getActiveInvoices();
-      const reminders = invoices.filter(i => i.status === "reminder_sent").length;
-      const followUps = invoices.filter(i => i.status === "follow_up_sent").length;
+      const drafted = invoices.filter(i => i.status === "reminder_drafted").length;
       const paid = invoices.filter(i => i.status === "paid").length;
 
       document.getElementById("actionSummary").innerHTML = `
@@ -677,8 +661,8 @@
         </div>
 
         <div class="mini-card">
-          <div style="font-weight:600; margin-bottom:6px;">${reminders} reminder${reminders === 1 ? "" : "s"} sent, ${followUps} follow-up${followUps === 1 ? "" : "s"} sent</div>
-          <div style="color:#667085; font-size:14px;">Use follow-ups for invoices that still need chasing.</div>
+          <div style="font-weight:600; margin-bottom:6px;">${drafted} reminder${drafted === 1 ? "" : "s"} drafted</div>
+          <div style="color:#667085; font-size:14px;">Use the email reminders button to open a draft for selected invoices.</div>
         </div>
 
         <div class="mini-card">
@@ -695,7 +679,7 @@
       updateActionCentre();
     }
 
-    function sendSelectedReminders() {
+    function draftSelectedReminders() {
       const selected = getSelectedInvoices();
 
       if (!selected.length) {
@@ -703,36 +687,38 @@
         return;
       }
 
-      invoices = invoices.map(invoice =>
-        invoice.selected && invoice.status !== "paid"
-          ? { ...invoice, status: "reminder_sent", selected: false }
-          : invoice
+      const recipients = selected.map(i => i.email).join(",");
+      const total = selected.reduce((sum, invoice) => sum + invoice.amount, 0);
+      const invoiceList = selected.map(i => `${i.number} (${formatMoney(i.amount)})`).join(", ");
+
+      const subject = encodeURIComponent("Payment reminder from Flow");
+      const body = encodeURIComponent(
+`Hi,
+
+Just a reminder that the following invoice(s) are overdue:
+
+${invoiceList}
+
+Total outstanding: ${formatMoney(total)}
+
+Please let us know if payment has already been made.
+
+Thanks`
       );
 
-      const total = selected.reduce((sum, invoice) => sum + invoice.amount, 0);
-      updateAllSummaries();
-      showInvoiceMessage(selected.length + " reminder email(s) sent. Potential cash recovered: " + formatMoney(total) + ".", "#E8F7EE");
-      addActivity("Sent " + selected.length + " reminder email(s) for " + formatMoney(total));
-    }
-
-    function sendFollowUp() {
-      const selected = getSelectedInvoices();
-
-      if (!selected.length) {
-        showInvoiceMessage("No invoices selected yet.", "#FFF4E5");
-        return;
-      }
-
       invoices = invoices.map(invoice =>
-        invoice.selected && invoice.status !== "paid"
-          ? { ...invoice, status: "follow_up_sent", selected: false }
-          : invoice
+        invoice.selected ? { ...invoice, status: "reminder_drafted", selected: false } : invoice
       );
 
-      const total = selected.reduce((sum, invoice) => sum + invoice.amount, 0);
       updateAllSummaries();
-      showInvoiceMessage(selected.length + " follow-up email(s) sent for " + formatMoney(total) + ".", "#EEF6FF");
-      addActivity("Sent " + selected.length + " follow-up email(s) for " + formatMoney(total));
+
+      const runwayText = document.getElementById("summaryRunway").innerText;
+      const days = parseInt(runwayText, 10);
+      if (!isNaN(days)) updateNextAction(days);
+
+      showInvoiceMessage(selected.length + " reminder email draft(s) prepared for " + formatMoney(total) + ".", "#E8F7EE");
+
+      window.location.href = `mailto:${recipients}?subject=${subject}&body=${body}`;
     }
 
     function markSelectedPaid() {
@@ -750,8 +736,12 @@
       );
 
       updateAllSummaries();
+
+      const runwayText = document.getElementById("summaryRunway").innerText;
+      const days = parseInt(runwayText, 10);
+      if (!isNaN(days)) updateNextAction(days);
+
       showInvoiceMessage(selected.length + " invoice(s) marked as paid. Removed from overdue total: " + formatMoney(total) + ".", "#E8F7EE");
-      addActivity("Marked " + selected.length + " invoice(s) as paid for " + formatMoney(total));
     }
 
     function selectAllInvoices() {
@@ -759,17 +749,26 @@
         invoice.status !== "paid" ? { ...invoice, selected: true } : invoice
       );
       updateAllSummaries();
+
+      const runwayText = document.getElementById("summaryRunway").innerText;
+      const days = parseInt(runwayText, 10);
+      if (!isNaN(days)) updateNextAction(days);
+
       showInvoiceMessage("All active overdue invoices selected.", "#EEF6FF");
     }
 
     function clearInvoices() {
       invoices = invoices.map(invoice => ({ ...invoice, selected: false }));
       updateAllSummaries();
+
+      const runwayText = document.getElementById("summaryRunway").innerText;
+      const days = parseInt(runwayText, 10);
+      if (!isNaN(days)) updateNextAction(days);
+
       showInvoiceMessage("Invoice selection cleared.", "#FFF4E5");
     }
 
     updateAllSummaries();
-    renderActivity();
     updateNextAction();
   </script>
 </body>
