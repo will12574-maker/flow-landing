@@ -1,178 +1,467 @@
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flow Dashboard</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f7fb;
+      color: #111;
+    }
+
+    .topbar {
+      background: white;
+      border-bottom: 1px solid #e9edf3;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-inner,
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .topbar-inner {
+      padding-top: 18px;
+      padding-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .nav {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #555;
+    }
+
+    .nav a.active {
+      color: #111;
+      font-weight: 600;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-dark {
+      background: #111;
+      color: white;
+    }
+
+    .btn-green {
+      background: #00c853;
+      color: white;
+    }
+
+    .btn-light {
+      background: white;
+      color: #111;
+      border: 1px solid #dbe2ea;
+    }
+
+    .page {
+      padding-top: 32px;
+      padding-bottom: 50px;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: 34px;
+    }
+
+    .page-header p {
+      margin: 10px 0 0 0;
+      color: #667085;
+      font-size: 17px;
+    }
+
+    .message {
+      display: none;
+      margin-top: 18px;
+      margin-bottom: 20px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: #eef6ff;
+      color: #234;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin: 28px 0;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+    }
+
+    .card h2 {
+      margin: 0 0 8px 0;
+      font-size: 22px;
+    }
+
+    .card-sub {
+      margin: 0 0 18px 0;
+      color: #667085;
+    }
+
+    .summary-card-label {
+      font-size: 14px;
+      color: #667085;
+      margin-bottom: 8px;
+    }
+
+    .summary-card-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .summary-card-note {
+      margin-top: 8px;
+      color: #667085;
+      font-size: 14px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #dbe2ea;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .button-row {
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .result-box {
+      margin-top: 20px;
+      display: none;
+      text-align: left;
+      padding: 18px;
+      border-radius: 12px;
+      background: #f4f6f8;
+    }
+
+    .result-box p {
+      margin-top: 0;
+    }
+
+    .result-main {
+      margin-bottom: 10px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .result-status {
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .result-advice {
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .result-breakdown {
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
+      color: #667085;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .invoice-list,
+    .activity-list,
+    .action-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .invoice-row,
+    .mini-card {
+      padding: 14px 16px;
+      border: 1px solid #edf1f5;
+      border-radius: 12px;
+      background: #fafbfd;
+    }
+
+    .invoice-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .invoice-left {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .invoice-client {
+      font-weight: 600;
+    }
+
+    .invoice-meta {
+      font-size: 14px;
+      color: #667085;
+    }
+
+    .invoice-right {
+      text-align: right;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .snapshot-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid #edf1f5;
+      gap: 12px;
+    }
+
+    .snapshot-row:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 900px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+
+      .summary-card-value {
+        font-size: 24px;
+      }
+
+      .invoice-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .invoice-right {
+        text-align: left;
+      }
+
+      .button-row,
+      .nav {
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
-<body style="margin:0; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f5f7fb; color:#111;">
-
-  <div style="background:white; border-bottom:1px solid #e9edf3; position:sticky; top:0; z-index:10;">
-    <div style="max-width:1200px; margin:0 auto; padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
-      <div style="font-size:22px; font-weight:700;">Flow</div>
-      <div style="display:flex; gap:24px; align-items:center;">
-        <a href="index.html" style="text-decoration:none; color:#555;">Home</a>
-        <a href="about.html" style="text-decoration:none; color:#555;">About</a>
-        <a href="app.html" style="text-decoration:none; color:#111; font-weight:600;">Dashboard</a>
-        <button id="xeroButton" onclick="connectXero()" style="padding:10px 14px; background:#111; color:white; border:none; border-radius:8px; cursor:pointer;">
-          Connect Xero
-        </button>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">Flow</div>
+      <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="app.html" class="active">Dashboard</a>
+        <button id="xeroButton" onclick="connectXero()" class="btn btn-dark">Connect Xero</button>
       </div>
     </div>
   </div>
 
-  <div style="max-width:1200px; margin:0 auto; padding:36px 24px 60px 24px;">
-
-    <div style="margin-bottom:28px;">
-      <h1 style="margin:0; font-size:34px;">Cash flow dashboard</h1>
-      <p style="margin:10px 0 0 0; color:#667085; font-size:17px;">
-        Monitor your cash position, spot risk early, and take action on overdue invoices.
-      </p>
+  <div class="page">
+    <div class="page-header">
+      <h1>Cash flow dashboard</h1>
+      <p>Monitor your cash position, spot risk early, and take action on overdue invoices.</p>
     </div>
 
-    <div id="xeroMessage" style="display:none; margin-bottom:20px; padding:16px 18px; border-radius:12px; background:#eef6ff; color:#234;"></div>
+    <div id="xeroMessage" class="message"></div>
 
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:28px;">
-
-      <div style="background:white; border-radius:16px; padding:22px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
-        <div style="font-size:14px; color:#667085; margin-bottom:8px;">Cash runway</div>
-        <div id="summaryRunway" style="font-size:28px; font-weight:700;">18 days</div>
-        <div style="margin-top:8px; color:#667085; font-size:14px;">Estimated from current inputs</div>
+    <div class="summary-grid">
+      <div class="card">
+        <div class="summary-card-label">Cash runway</div>
+        <div id="summaryRunway" class="summary-card-value">18 days</div>
+        <div class="summary-card-note">Estimated from current inputs</div>
       </div>
 
-      <div style="background:white; border-radius:16px; padding:22px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
-        <div style="font-size:14px; color:#667085; margin-bottom:8px;">Overdue invoices</div>
-        <div id="summaryOverdue" style="font-size:28px; font-weight:700;">£8,200</div>
-        <div id="summaryOverdueCount" style="margin-top:8px; color:#667085; font-size:14px;">3 overdue invoices</div>
+      <div class="card">
+        <div class="summary-card-label">Overdue invoices</div>
+        <div id="summaryOverdue" class="summary-card-value">£8,200</div>
+        <div id="summaryOverdueCount" class="summary-card-note">3 overdue invoices</div>
       </div>
 
-      <div style="background:white; border-radius:16px; padding:22px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
-        <div style="font-size:14px; color:#667085; margin-bottom:8px;">Selected to chase</div>
-        <div id="summarySelected" style="font-size:28px; font-weight:700;">£0</div>
-        <div id="summarySelectedCount" style="margin-top:8px; color:#667085; font-size:14px;">0 invoices selected</div>
+      <div class="card">
+        <div class="summary-card-label">Selected to chase</div>
+        <div id="summarySelected" class="summary-card-value">£0</div>
+        <div id="summarySelectedCount" class="summary-card-note">0 invoices selected</div>
       </div>
 
-      <div style="background:white; border-radius:16px; padding:22px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
-        <div style="font-size:14px; color:#667085; margin-bottom:8px;">Risk level</div>
-        <div id="summaryRisk" style="font-size:28px; font-weight:700;">Warning</div>
-        <div style="margin-top:8px; color:#667085; font-size:14px;">Based on runway calculation</div>
+      <div class="card">
+        <div class="summary-card-label">Risk level</div>
+        <div id="summaryRisk" class="summary-card-value">Warning</div>
+        <div class="summary-card-note">Based on runway calculation</div>
       </div>
     </div>
 
-    <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:24px;">
+    <div class="main-grid">
+      <div class="column">
+        <div class="card">
+          <h2>Cash flow checker</h2>
+          <p class="card-sub">Estimate how long your cash will last.</p>
 
-      <div style="display:flex; flex-direction:column; gap:24px;">
-
-        <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
-          <h2 style="margin:0 0 8px 0; font-size:22px;">Cash flow checker</h2>
-          <p style="margin:0 0 18px 0; color:#667085;">Estimate how long your cash will last.</p>
-
-          <div style="display:grid; gap:14px;">
-            <input id="cash" type="number" placeholder="Current cash (£)" style="padding:14px; border:1px solid #dbe2ea; border-radius:10px; font-size:15px;">
-            <input id="incoming" type="number" placeholder="Expected incoming this month (£)" style="padding:14px; border:1px solid #dbe2ea; border-radius:10px; font-size:15px;">
-            <input id="expenses" type="number" placeholder="Monthly expenses (£)" style="padding:14px; border:1px solid #dbe2ea; border-radius:10px; font-size:15px;">
+          <div class="stack">
+            <input id="cash" type="number" placeholder="Current cash (£)">
+            <input id="incoming" type="number" placeholder="Expected incoming this month (£)">
+            <input id="expenses" type="number" placeholder="Monthly expenses (£)">
           </div>
 
-          <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
-            <button onclick="calculate()" style="padding:12px 18px; background:#111; color:white; border:none; border-radius:10px; cursor:pointer; font-size:15px;">
-              Check cash flow
-            </button>
-
-            <button onclick="loadExampleData()" style="padding:12px 18px; background:white; color:#111; border:1px solid #dbe2ea; border-radius:10px; cursor:pointer; font-size:15px;">
-              Load example
-            </button>
+          <div class="button-row">
+            <button onclick="calculate()" class="btn btn-dark">Check cash flow</button>
+            <button onclick="loadExampleData()" class="btn btn-light">Load example</button>
           </div>
 
-          <div id="resultBox" style="margin-top:20px; display:none; text-align:left; padding:18px; border-radius:12px; background:#f4f6f8;">
-            <p id="result" style="margin:0 0 10px 0; font-size:22px; font-weight:700;"></p>
-            <p id="status" style="margin:0 0 10px 0; font-weight:600;"></p>
-            <p id="advice" style="margin:0; color:#555; line-height:1.5;"></p>
+          <div id="resultBox" class="result-box">
+            <p id="result" class="result-main"></p>
+            <p id="status" class="result-status"></p>
+            <p id="advice" class="result-advice"></p>
+            <div id="resultBreakdown" class="result-breakdown"></div>
           </div>
         </div>
 
-        <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
-          <h2 style="margin:0 0 8px 0; font-size:22px;">Action centre</h2>
-          <p style="margin:0 0 18px 0; color:#667085;">A simple view of what needs attention.</p>
-
-          <div id="actionSummary" style="display:grid; gap:14px;">
-            <div style="padding:16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd;">
-              <div style="font-weight:600; margin-bottom:6px;">3 invoices are overdue</div>
-              <div style="color:#667085; font-size:14px;">Total overdue value: £8,200.</div>
-            </div>
-
-            <div style="padding:16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd;">
-              <div style="font-weight:600; margin-bottom:6px;">No reminders sent yet</div>
-              <div style="color:#667085; font-size:14px;">Select invoices and chase them now.</div>
-            </div>
-          </div>
+        <div class="card">
+          <h2>Action centre</h2>
+          <p class="card-sub">A simple view of what needs attention.</p>
+          <div id="actionSummary" class="action-list"></div>
         </div>
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:24px;">
+      <div class="column">
+        <div class="card">
+          <h2>Overdue invoices</h2>
+          <p class="card-sub">Select invoices to chase, follow up, or mark as paid.</p>
 
-        <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
-          <h2 style="margin:0 0 8px 0; font-size:22px;">Overdue invoices</h2>
-          <p style="margin:0 0 18px 0; color:#667085;">Select invoices to chase, follow up, or mark as paid.</p>
+          <div id="invoiceList" class="invoice-list"></div>
 
-          <div id="invoiceList" style="display:grid; gap:10px;"></div>
-
-          <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button onclick="sendSelectedReminders()" style="padding:12px 16px; background:#00c853; color:white; border:none; border-radius:10px; cursor:pointer;">
-              Send reminders
-            </button>
-
-            <button onclick="sendFollowUp()" style="padding:12px 16px; background:#111; color:white; border:none; border-radius:10px; cursor:pointer;">
-              Send follow-up
-            </button>
-
-            <button onclick="markSelectedPaid()" style="padding:12px 16px; background:white; color:#111; border:1px solid #dbe2ea; border-radius:10px; cursor:pointer;">
-              Mark as paid
-            </button>
-
-            <button onclick="selectAllInvoices()" style="padding:12px 16px; background:white; color:#111; border:1px solid #dbe2ea; border-radius:10px; cursor:pointer;">
-              Select all
-            </button>
-
-            <button onclick="clearInvoices()" style="padding:12px 16px; background:white; color:#111; border:1px solid #dbe2ea; border-radius:10px; cursor:pointer;">
-              Clear
-            </button>
+          <div class="button-row">
+            <button onclick="sendSelectedReminders()" class="btn btn-green">Send reminders</button>
+            <button onclick="sendFollowUp()" class="btn btn-dark">Send follow-up</button>
+            <button onclick="markSelectedPaid()" class="btn btn-light">Mark as paid</button>
+            <button onclick="selectAllInvoices()" class="btn btn-light">Select all</button>
+            <button onclick="clearInvoices()" class="btn btn-light">Clear</button>
           </div>
 
-          <div id="invoiceMessage" style="display:none; margin-top:18px; padding:16px; border-radius:12px; background:#eef7ff; color:#234;"></div>
+          <div id="invoiceMessage" class="message" style="margin-bottom:0;"></div>
         </div>
 
-        <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
-          <h2 style="margin:0 0 8px 0; font-size:22px;">Recent activity</h2>
-          <p style="margin:0 0 18px 0; color:#667085;">Latest actions taken in Flow.</p>
-
-          <div id="activityList" style="display:grid; gap:12px;"></div>
+        <div class="card">
+          <h2>Recent activity</h2>
+          <p class="card-sub">Latest actions taken in Flow.</p>
+          <div id="activityList" class="activity-list"></div>
         </div>
 
-        <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
-          <h2 style="margin:0 0 8px 0; font-size:22px;">Cash snapshot</h2>
-          <p style="margin:0 0 18px 0; color:#667085;">A simple view of your current position.</p>
+        <div class="card">
+          <h2>Cash snapshot</h2>
+          <p class="card-sub">A simple view of your current position.</p>
 
-          <div style="display:grid; gap:14px;">
-            <div style="display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid #edf1f5;">
-              <span style="color:#667085;">Current cash</span>
-              <strong id="snapshotCash">£0</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid #edf1f5;">
-              <span style="color:#667085;">Expected incoming</span>
-              <strong id="snapshotIncoming">£0</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid #edf1f5;">
-              <span style="color:#667085;">Monthly expenses</span>
-              <strong id="snapshotExpenses">£0</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between; padding:14px 0;">
-              <span style="color:#667085;">Estimated runway</span>
-              <strong id="snapshotRunway">18 days</strong>
-            </div>
+          <div class="snapshot-row">
+            <span style="color:#667085;">Current cash</span>
+            <strong id="snapshotCash">£0</strong>
+          </div>
+          <div class="snapshot-row">
+            <span style="color:#667085;">Expected incoming</span>
+            <strong id="snapshotIncoming">£0</strong>
+          </div>
+          <div class="snapshot-row">
+            <span style="color:#667085;">Monthly expenses</span>
+            <strong id="snapshotExpenses">£0</strong>
+          </div>
+          <div class="snapshot-row">
+            <span style="color:#667085;">Estimated runway</span>
+            <strong id="snapshotRunway">18 days</strong>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -198,52 +487,55 @@
       renderActivity();
     }
 
+    function showTopMessage(text, bg) {
+      const box = document.getElementById("xeroMessage");
+      box.style.display = "block";
+      box.style.background = bg;
+      box.innerText = text;
+    }
+
+    function showInvoiceMessage(text, bg) {
+      const box = document.getElementById("invoiceMessage");
+      box.style.display = "block";
+      box.style.background = bg;
+      box.innerText = text;
+    }
+
     function renderActivity() {
-      const list = document.getElementById('activityList');
+      const list = document.getElementById("activityList");
 
       if (!activityLog.length) {
-        list.innerHTML = `
-          <div style="padding:16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd; color:#667085;">
-            No recent activity yet.
-          </div>
-        `;
+        list.innerHTML = `<div class="mini-card" style="color:#667085;">No recent activity yet.</div>`;
         return;
       }
 
       list.innerHTML = activityLog.map(item => `
-        <div style="padding:14px 16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd;">
+        <div class="mini-card">
           <div style="font-weight:600; margin-bottom:6px;">${item.text}</div>
           <div style="font-size:13px; color:#667085;">${item.time}</div>
         </div>
-      `).join('');
+      `).join("");
     }
 
     function connectXero() {
-      const box = document.getElementById('xeroMessage');
-      const button = document.getElementById('xeroButton');
+      const button = document.getElementById("xeroButton");
 
       if (isXeroConnected) {
-        box.style.display = 'block';
-        box.style.background = '#e8f7ee';
-        box.innerText = "Xero is already connected. Live accounting data is loaded in demo mode.";
+        showTopMessage("Xero is already connected. Live accounting data is loaded in demo mode.", "#e8f7ee");
         addActivity("Checked Xero connection");
         return;
       }
 
-      box.style.display = 'block';
-      box.style.background = '#eef6ff';
-      box.innerText = "Connecting to Xero...";
+      showTopMessage("Connecting to Xero...", "#eef6ff");
       button.innerText = "Connecting...";
       button.disabled = true;
-      button.style.opacity = '0.7';
-      button.style.cursor = 'default';
 
       setTimeout(() => {
         isXeroConnected = true;
 
-        document.getElementById('cash').value = 4200;
-        document.getElementById('incoming').value = 5800;
-        document.getElementById('expenses').value = 6200;
+        document.getElementById("cash").value = 4200;
+        document.getElementById("incoming").value = 5800;
+        document.getElementById("expenses").value = 6200;
 
         invoices = [
           { id: 1, client: "Acme Studio", number: "#1024", overdueDays: 14, amount: 2400, status: "overdue", selected: false },
@@ -252,14 +544,11 @@
           { id: 4, client: "Oak & Co", number: "#1035", overdueDays: 4, amount: 1800, status: "overdue", selected: false }
         ];
 
-        box.style.background = '#e8f7ee';
-        box.innerText = "Xero connected. Demo accounting data loaded successfully.";
         button.innerText = "Xero connected";
-        button.style.background = '#00c853';
+        button.className = "btn btn-green";
         button.disabled = false;
-        button.style.opacity = '1';
-        button.style.cursor = 'pointer';
 
+        showTopMessage("Xero connected. Demo accounting data loaded successfully.", "#e8f7ee");
         calculate();
         updateAllSummaries();
         addActivity("Connected Xero and loaded demo accounting data");
@@ -267,63 +556,71 @@
     }
 
     function loadExampleData() {
-      document.getElementById('cash').value = 5000;
-      document.getElementById('incoming').value = 3000;
-      document.getElementById('expenses').value = 4000;
+      document.getElementById("cash").value = 5000;
+      document.getElementById("incoming").value = 3000;
+      document.getElementById("expenses").value = 4000;
       calculate();
       addActivity("Loaded example cash flow data");
     }
 
     function calculate() {
-      const cash = parseFloat(document.getElementById('cash').value) || 0;
-      const incoming = parseFloat(document.getElementById('incoming').value) || 0;
-      const expenses = parseFloat(document.getElementById('expenses').value) || 0;
+      const cash = parseFloat(document.getElementById("cash").value) || 0;
+      const incoming = parseFloat(document.getElementById("incoming").value) || 0;
+      const expenses = parseFloat(document.getElementById("expenses").value) || 0;
 
-      const resultBox = document.getElementById('resultBox');
-      const result = document.getElementById('result');
-      const status = document.getElementById('status');
-      const advice = document.getElementById('advice');
+      const resultBox = document.getElementById("resultBox");
+      const result = document.getElementById("result");
+      const status = document.getElementById("status");
+      const advice = document.getElementById("advice");
+      const breakdown = document.getElementById("resultBreakdown");
 
       if (expenses <= 0) {
-        resultBox.style.display = 'block';
-        resultBox.style.background = '#fff4e5';
+        resultBox.style.display = "block";
+        resultBox.style.background = "#fff4e5";
         result.innerText = "Please enter your monthly expenses";
         status.innerText = "";
         advice.innerText = "";
+        breakdown.innerHTML = "";
         return;
       }
 
       const total = cash + incoming;
       const days = Math.round((total / expenses) * 30);
-
-      resultBox.style.display = 'block';
-      result.innerText = "You will run out of cash in " + days + " days";
-
       let risk = "Healthy";
 
+      resultBox.style.display = "block";
+      result.innerText = "You will run out of cash in " + days + " days";
+
       if (days <= 14) {
-        resultBox.style.background = '#ffe5e5';
+        resultBox.style.background = "#ffe5e5";
         status.innerText = "High risk";
         advice.innerText = "You may need to act now. Chase overdue invoices, reduce non-essential spending, and review upcoming payments.";
         risk = "High risk";
       } else if (days <= 30) {
-        resultBox.style.background = '#fff4e5';
+        resultBox.style.background = "#fff4e5";
         status.innerText = "Warning";
         advice.innerText = "You should keep a close eye on cash. Consider chasing invoices and reducing flexible costs this month.";
         risk = "Warning";
       } else {
-        resultBox.style.background = '#e8f7ee';
+        resultBox.style.background = "#e8f7ee";
         status.innerText = "Healthy";
         advice.innerText = "Your current position looks okay for now. Keep monitoring invoices and stay ahead of future shortfalls.";
         risk = "Healthy";
       }
 
-      document.getElementById('summaryRunway').innerText = days + " days";
-      document.getElementById('summaryRisk').innerText = risk;
-      document.getElementById('snapshotCash').innerText = formatMoney(cash);
-      document.getElementById('snapshotIncoming').innerText = formatMoney(incoming);
-      document.getElementById('snapshotExpenses').innerText = formatMoney(expenses);
-      document.getElementById('snapshotRunway').innerText = days + " days";
+      breakdown.innerHTML = `
+        <strong>Based on:</strong><br>
+        Current cash: ${formatMoney(cash)}<br>
+        Expected incoming this month: ${formatMoney(incoming)}<br>
+        Monthly expenses: ${formatMoney(expenses)}
+      `;
+
+      document.getElementById("summaryRunway").innerText = days + " days";
+      document.getElementById("summaryRisk").innerText = risk;
+      document.getElementById("snapshotCash").innerText = formatMoney(cash);
+      document.getElementById("snapshotIncoming").innerText = formatMoney(incoming);
+      document.getElementById("snapshotExpenses").innerText = formatMoney(expenses);
+      document.getElementById("snapshotRunway").innerText = days + " days";
     }
 
     function getActiveInvoices() {
@@ -339,14 +636,14 @@
     }
 
     function renderInvoices() {
-      const list = document.getElementById('invoiceList');
-      list.innerHTML = '';
+      const list = document.getElementById("invoiceList");
+      list.innerHTML = "";
 
       const activeInvoices = getActiveInvoices();
 
-      if (activeInvoices.length === 0) {
+      if (!activeInvoices.length) {
         list.innerHTML = `
-          <div style="padding:18px; border:1px solid #edf1f5; border-radius:12px; background:#f8fbf8;">
+          <div class="mini-card">
             <div style="font-weight:600; margin-bottom:6px;">No overdue invoices left</div>
             <div style="color:#667085; font-size:14px;">Everything overdue has been marked as paid.</div>
           </div>
@@ -372,19 +669,17 @@
         }
 
         list.innerHTML += `
-          <label style="display:flex; justify-content:space-between; align-items:center; padding:14px; border:1px solid #edf1f5; border-radius:12px; cursor:pointer; background:#fcfdff;">
-            <div style="display:flex; gap:12px; align-items:flex-start;">
-              <input type="checkbox" ${invoice.selected ? 'checked' : ''} onchange="toggleInvoice(${invoice.id})">
+          <label class="invoice-row">
+            <div class="invoice-left">
+              <input type="checkbox" ${invoice.selected ? "checked" : ""} onchange="toggleInvoice(${invoice.id})">
               <div>
-                <div style="font-weight:600;">${invoice.client}</div>
-                <div style="font-size:14px; color:#667085;">Invoice ${invoice.number} • ${invoice.overdueDays} days overdue</div>
+                <div class="invoice-client">${invoice.client}</div>
+                <div class="invoice-meta">Invoice ${invoice.number} • ${invoice.overdueDays} days overdue</div>
               </div>
             </div>
-            <div style="text-align:right;">
-              <div style="font-weight:700; margin-bottom:6px;">${formatMoney(invoice.amount)}</div>
-              <div style="display:inline-block; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:600; background:${badgeBg}; color:${badgeColor};">
-                ${badgeText}
-              </div>
+            <div class="invoice-right">
+              <div style="font-weight:700;">${formatMoney(invoice.amount)}</div>
+              <div class="badge" style="background:${badgeBg}; color:${badgeColor};">${badgeText}</div>
             </div>
           </label>
         `;
@@ -402,15 +697,15 @@
       const selected = getSelectedInvoices();
       const selectedTotal = selected.reduce((sum, invoice) => sum + invoice.amount, 0);
 
-      document.getElementById('summarySelected').innerText = formatMoney(selectedTotal);
-      document.getElementById('summarySelectedCount').innerText =
+      document.getElementById("summarySelected").innerText = formatMoney(selectedTotal);
+      document.getElementById("summarySelectedCount").innerText =
         selected.length + " invoice" + (selected.length === 1 ? "" : "s") + " selected";
     }
 
     function updateOverdueSummary() {
       const active = getActiveInvoices();
-      document.getElementById('summaryOverdue').innerText = formatMoney(getOverdueTotal());
-      document.getElementById('summaryOverdueCount').innerText =
+      document.getElementById("summaryOverdue").innerText = formatMoney(getOverdueTotal());
+      document.getElementById("summaryOverdueCount").innerText =
         active.length + " overdue invoice" + (active.length === 1 ? "" : "s");
     }
 
@@ -420,19 +715,19 @@
       const followUps = invoices.filter(i => i.status === "follow_up_sent").length;
       const paid = invoices.filter(i => i.status === "paid").length;
 
-      document.getElementById('actionSummary').innerHTML = `
-        <div style="padding:16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd;">
-          <div style="font-weight:600; margin-bottom:6px;">${active.length} invoice${active.length === 1 ? '' : 's'} still need attention</div>
+      document.getElementById("actionSummary").innerHTML = `
+        <div class="mini-card">
+          <div style="font-weight:600; margin-bottom:6px;">${active.length} invoice${active.length === 1 ? "" : "s"} still need attention</div>
           <div style="color:#667085; font-size:14px;">Outstanding overdue value: ${formatMoney(getOverdueTotal())}.</div>
         </div>
 
-        <div style="padding:16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd;">
-          <div style="font-weight:600; margin-bottom:6px;">${reminders} reminder${reminders === 1 ? '' : 's'} sent, ${followUps} follow-up${followUps === 1 ? '' : 's'} sent</div>
+        <div class="mini-card">
+          <div style="font-weight:600; margin-bottom:6px;">${reminders} reminder${reminders === 1 ? "" : "s"} sent, ${followUps} follow-up${followUps === 1 ? "" : "s"} sent</div>
           <div style="color:#667085; font-size:14px;">Use follow-ups for invoices that still need chasing.</div>
         </div>
 
-        <div style="padding:16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd;">
-          <div style="font-weight:600; margin-bottom:6px;">${paid} invoice${paid === 1 ? '' : 's'} marked as paid</div>
+        <div class="mini-card">
+          <div style="font-weight:600; margin-bottom:6px;">${paid} invoice${paid === 1 ? "" : "s"} marked as paid</div>
           <div style="color:#667085; font-size:14px;">Paid invoices are removed from the overdue total.</div>
         </div>
       `;
@@ -445,18 +740,11 @@
       updateActionCentre();
     }
 
-    function showMessage(text, bg) {
-      const box = document.getElementById('invoiceMessage');
-      box.style.display = 'block';
-      box.style.background = bg;
-      box.innerText = text;
-    }
-
     function sendSelectedReminders() {
       const selected = getSelectedInvoices();
 
-      if (selected.length === 0) {
-        showMessage("No invoices selected yet.", "#fff4e5");
+      if (!selected.length) {
+        showInvoiceMessage("No invoices selected yet.", "#fff4e5");
         return;
       }
 
@@ -468,15 +756,15 @@
 
       const total = selected.reduce((sum, invoice) => sum + invoice.amount, 0);
       updateAllSummaries();
-      showMessage(selected.length + " reminder email(s) sent. Potential cash recovered: " + formatMoney(total) + ".", "#e8f7ee");
+      showInvoiceMessage(selected.length + " reminder email(s) sent. Potential cash recovered: " + formatMoney(total) + ".", "#e8f7ee");
       addActivity("Sent " + selected.length + " reminder email(s) for " + formatMoney(total));
     }
 
     function sendFollowUp() {
       const selected = getSelectedInvoices();
 
-      if (selected.length === 0) {
-        showMessage("No invoices selected yet.", "#fff4e5");
+      if (!selected.length) {
+        showInvoiceMessage("No invoices selected yet.", "#fff4e5");
         return;
       }
 
@@ -488,15 +776,15 @@
 
       const total = selected.reduce((sum, invoice) => sum + invoice.amount, 0);
       updateAllSummaries();
-      showMessage(selected.length + " follow-up email(s) sent for " + formatMoney(total) + ".", "#eef6ff");
+      showInvoiceMessage(selected.length + " follow-up email(s) sent for " + formatMoney(total) + ".", "#eef6ff");
       addActivity("Sent " + selected.length + " follow-up email(s) for " + formatMoney(total));
     }
 
     function markSelectedPaid() {
       const selected = getSelectedInvoices();
 
-      if (selected.length === 0) {
-        showMessage("No invoices selected yet.", "#fff4e5");
+      if (!selected.length) {
+        showInvoiceMessage("No invoices selected yet.", "#fff4e5");
         return;
       }
 
@@ -507,7 +795,7 @@
       );
 
       updateAllSummaries();
-      showMessage(selected.length + " invoice(s) marked as paid. Removed from overdue total: " + formatMoney(total) + ".", "#e8f7ee");
+      showInvoiceMessage(selected.length + " invoice(s) marked as paid. Removed from overdue total: " + formatMoney(total) + ".", "#e8f7ee");
       addActivity("Marked " + selected.length + " invoice(s) as paid for " + formatMoney(total));
     }
 
@@ -516,18 +804,17 @@
         invoice.status !== "paid" ? { ...invoice, selected: true } : invoice
       );
       updateAllSummaries();
-      showMessage("All active overdue invoices selected.", "#eef7ff");
+      showInvoiceMessage("All active overdue invoices selected.", "#eef6ff");
     }
 
     function clearInvoices() {
       invoices = invoices.map(invoice => ({ ...invoice, selected: false }));
       updateAllSummaries();
-      showMessage("Invoice selection cleared.", "#fff4e5");
+      showInvoiceMessage("Invoice selection cleared.", "#fff4e5");
     }
 
     updateAllSummaries();
     renderActivity();
   </script>
-
 </body>
 </html>
