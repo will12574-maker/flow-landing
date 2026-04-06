@@ -142,6 +142,13 @@
         </div>
 
         <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+          <h2 style="margin:0 0 8px 0; font-size:22px;">Recent activity</h2>
+          <p style="margin:0 0 18px 0; color:#667085;">Latest actions taken in Flow.</p>
+
+          <div id="activityList" style="display:grid; gap:12px;"></div>
+        </div>
+
+        <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
           <h2 style="margin:0 0 8px 0; font-size:22px;">Cash snapshot</h2>
           <p style="margin:0 0 18px 0; color:#667085;">A simple view of your current position.</p>
 
@@ -171,6 +178,9 @@
 
   <script>
     let isXeroConnected = false;
+    let activityLog = [
+      { text: "Dashboard ready for review", time: "Just now" }
+    ];
 
     let invoices = [
       { id: 1, client: "Acme Studio", number: "#1024", overdueDays: 14, amount: 2400, status: "overdue", selected: false },
@@ -182,6 +192,32 @@
       return "£" + Number(amount).toLocaleString();
     }
 
+    function addActivity(text) {
+      activityLog.unshift({ text, time: "Just now" });
+      activityLog = activityLog.slice(0, 6);
+      renderActivity();
+    }
+
+    function renderActivity() {
+      const list = document.getElementById('activityList');
+
+      if (!activityLog.length) {
+        list.innerHTML = `
+          <div style="padding:16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd; color:#667085;">
+            No recent activity yet.
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = activityLog.map(item => `
+        <div style="padding:14px 16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd;">
+          <div style="font-weight:600; margin-bottom:6px;">${item.text}</div>
+          <div style="font-size:13px; color:#667085;">${item.time}</div>
+        </div>
+      `).join('');
+    }
+
     function connectXero() {
       const box = document.getElementById('xeroMessage');
       const button = document.getElementById('xeroButton');
@@ -190,6 +226,7 @@
         box.style.display = 'block';
         box.style.background = '#e8f7ee';
         box.innerText = "Xero is already connected. Live accounting data is loaded in demo mode.";
+        addActivity("Checked Xero connection");
         return;
       }
 
@@ -225,6 +262,7 @@
 
         calculate();
         updateAllSummaries();
+        addActivity("Connected Xero and loaded demo accounting data");
       }, 1400);
     }
 
@@ -233,6 +271,7 @@
       document.getElementById('incoming').value = 3000;
       document.getElementById('expenses').value = 4000;
       calculate();
+      addActivity("Loaded example cash flow data");
     }
 
     function calculate() {
@@ -430,6 +469,7 @@
       const total = selected.reduce((sum, invoice) => sum + invoice.amount, 0);
       updateAllSummaries();
       showMessage(selected.length + " reminder email(s) sent. Potential cash recovered: " + formatMoney(total) + ".", "#e8f7ee");
+      addActivity("Sent " + selected.length + " reminder email(s) for " + formatMoney(total));
     }
 
     function sendFollowUp() {
@@ -449,6 +489,7 @@
       const total = selected.reduce((sum, invoice) => sum + invoice.amount, 0);
       updateAllSummaries();
       showMessage(selected.length + " follow-up email(s) sent for " + formatMoney(total) + ".", "#eef6ff");
+      addActivity("Sent " + selected.length + " follow-up email(s) for " + formatMoney(total));
     }
 
     function markSelectedPaid() {
@@ -467,6 +508,7 @@
 
       updateAllSummaries();
       showMessage(selected.length + " invoice(s) marked as paid. Removed from overdue total: " + formatMoney(total) + ".", "#e8f7ee");
+      addActivity("Marked " + selected.length + " invoice(s) as paid for " + formatMoney(total));
     }
 
     function selectAllInvoices() {
@@ -484,6 +526,7 @@
     }
 
     updateAllSummaries();
+    renderActivity();
   </script>
 
 </body>
