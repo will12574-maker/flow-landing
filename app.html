@@ -1,219 +1,248 @@
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Flow Demo</title>
+  <title>Flow Dashboard</title>
 </head>
 
-<body style="margin:0; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f9fafb; color:#111;">
+<body style="margin:0; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f5f7fb; color:#111;">
 
-  <div style="background:white; border-bottom:1px solid #eee;">
-    <div style="max-width:1100px; margin:0 auto; padding:20px; display:flex; justify-content:space-between; align-items:center;">
+  <!-- Top Nav -->
+  <div style="background:white; border-bottom:1px solid #e9edf3; position:sticky; top:0; z-index:10;">
+    <div style="max-width:1200px; margin:0 auto; padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
       <div style="font-size:22px; font-weight:700;">Flow</div>
-      <div>
-        <a href="index.html" style="margin-right:20px; text-decoration:none; color:#111;">Home</a>
-        <a href="about.html" style="margin-right:20px; text-decoration:none; color:#111;">About</a>
-        <a href="app.html" style="text-decoration:none; color:#111;">Demo</a>
+      <div style="display:flex; gap:24px; align-items:center;">
+        <a href="index.html" style="text-decoration:none; color:#555;">Home</a>
+        <a href="about.html" style="text-decoration:none; color:#555;">About</a>
+        <a href="app.html" style="text-decoration:none; color:#111; font-weight:600;">Dashboard</a>
+        <button onclick="connectXero()" style="padding:10px 14px; background:#111; color:white; border:none; border-radius:8px; cursor:pointer;">
+          Connect Xero
+        </button>
       </div>
     </div>
   </div>
 
-  <div style="max-width:950px; margin:0 auto; padding:80px 20px; text-align:center;">
+  <div style="max-width:1200px; margin:0 auto; padding:36px 24px 60px 24px;">
 
-    <h1 style="font-size:48px; margin-bottom:15px;">Flow demo</h1>
-    <p style="font-size:20px; color:#555; margin-bottom:20px;">
-      Test your cash position and take action on overdue invoices.
-    </p>
-
-    <div style="margin-bottom:40px;">
-      <button onclick="connectXero()" style="
-        padding:12px 18px;
-        background:#111;
-        color:white;
-        border:none;
-        border-radius:8px;
-        cursor:pointer;
-        font-size:15px;
-      ">
-        Connect to Xero
-      </button>
-
-      <div id="xeroMessage" style="
-        display:none;
-        max-width:520px;
-        margin:15px auto 0 auto;
-        padding:14px 16px;
-        border-radius:10px;
-        background:#eef7ff;
-        color:#234;
-        text-align:left;
-      "></div>
-    </div>
-
-    <div style="
-      background:white;
-      border-radius:12px;
-      padding:35px;
-      max-width:520px;
-      margin-left:auto;
-      margin-right:auto;
-      box-shadow:0 10px 25px rgba(0,0,0,0.08);
-      text-align:center;
-    ">
-
-      <h2 style="margin-bottom:20px;">Check your cash flow</h2>
-
-      <input id="cash" type="number" placeholder="Current cash (£)" style="margin:8px 0; padding:12px; width:80%; border:1px solid #ddd; border-radius:8px;">
-      <br>
-
-      <input id="incoming" type="number" placeholder="Expected incoming this month (£)" style="margin:8px 0; padding:12px; width:80%; border:1px solid #ddd; border-radius:8px;">
-      <br>
-
-      <input id="expenses" type="number" placeholder="Monthly expenses (£)" style="margin:8px 0; padding:12px; width:80%; border:1px solid #ddd; border-radius:8px;">
-      <br>
-
-      <button onclick="calculate()" style="
-        margin-top:15px;
-        padding:12px 20px;
-        background:#111;
-        color:white;
-        border:none;
-        border-radius:8px;
-        cursor:pointer;
-        font-size:15px;
-      ">
-        Check my cash flow
-      </button>
-
-      <div id="resultBox" style="
-        margin-top:25px;
-        display:none;
-        text-align:left;
-        padding:20px;
-        border-radius:10px;
-        background:#f4f6f8;
-      ">
-        <p id="result" style="margin:0 0 10px 0; font-size:20px; font-weight:bold;"></p>
-        <p id="status" style="margin:0 0 10px 0; font-weight:600;"></p>
-        <p id="advice" style="margin:0;"></p>
-      </div>
-
-    </div>
-
-    <div style="
-      margin-top:80px;
-      background:white;
-      border-radius:12px;
-      padding:35px;
-      max-width:760px;
-      margin-left:auto;
-      margin-right:auto;
-      box-shadow:0 10px 25px rgba(0,0,0,0.08);
-      text-align:left;
-    ">
-
-      <h2 style="margin-top:0; margin-bottom:10px;">Overdue invoices</h2>
-      <p style="color:#666; margin-top:0; margin-bottom:25px;">
-        Select invoices to chase.
+    <!-- Page Header -->
+    <div style="margin-bottom:28px;">
+      <h1 style="margin:0; font-size:34px;">Cash flow dashboard</h1>
+      <p style="margin:10px 0 0 0; color:#667085; font-size:17px;">
+        Monitor your cash position, spot risk early, and chase overdue invoices.
       </p>
-
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid #eee;">
-        <label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; flex:1;">
-          <input type="checkbox" class="invoice-check" value="2400">
-          <div>
-            <div style="font-weight:600;">Acme Studio</div>
-            <div style="font-size:14px; color:#777;">Invoice #1024 • 14 days overdue</div>
-          </div>
-        </label>
-        <div style="font-weight:600;">£2,400</div>
-      </div>
-
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid #eee;">
-        <label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; flex:1;">
-          <input type="checkbox" class="invoice-check" value="3100">
-          <div>
-            <div style="font-weight:600;">Northway Media</div>
-            <div style="font-size:14px; color:#777;">Invoice #1028 • 9 days overdue</div>
-          </div>
-        </label>
-        <div style="font-weight:600;">£3,100</div>
-      </div>
-
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0;">
-        <label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer; flex:1;">
-          <input type="checkbox" class="invoice-check" value="2700">
-          <div>
-            <div style="font-weight:600;">Bright Lane</div>
-            <div style="font-size:14px; color:#777;">Invoice #1031 • 6 days overdue</div>
-          </div>
-        </label>
-        <div style="font-weight:600;">£2,700</div>
-      </div>
-
-      <div style="margin-top:25px; display:flex; gap:12px; flex-wrap:wrap;">
-        <button onclick="sendSelectedReminders()" style="
-          padding:12px 18px;
-          background:#00c853;
-          color:white;
-          border:none;
-          border-radius:8px;
-          cursor:pointer;
-          font-size:15px;
-        ">
-          Send reminders to selected
-        </button>
-
-        <button onclick="showSelectedTotal()" style="
-          padding:12px 18px;
-          background:#111;
-          color:white;
-          border:none;
-          border-radius:8px;
-          cursor:pointer;
-          font-size:15px;
-        ">
-          Show selected total
-        </button>
-
-        <button onclick="selectAllInvoices()" style="
-          padding:12px 18px;
-          background:white;
-          color:#111;
-          border:1px solid #ddd;
-          border-radius:8px;
-          cursor:pointer;
-          font-size:15px;
-        ">
-          Select all
-        </button>
-
-        <button onclick="clearInvoices()" style="
-          padding:12px 18px;
-          background:white;
-          color:#111;
-          border:1px solid #ddd;
-          border-radius:8px;
-          cursor:pointer;
-          font-size:15px;
-        ">
-          Clear selection
-        </button>
-      </div>
-
-      <div id="invoiceMessage" style="
-        display:none;
-        margin-top:20px;
-        padding:16px;
-        border-radius:10px;
-        background:#eef7ff;
-        color:#234;
-      "></div>
-
     </div>
 
+    <!-- Xero Message -->
+    <div id="xeroMessage" style="display:none; margin-bottom:20px; padding:16px 18px; border-radius:12px; background:#eef6ff; color:#234;"></div>
+
+    <!-- Summary Cards -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:28px;">
+
+      <div style="background:white; border-radius:16px; padding:22px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+        <div style="font-size:14px; color:#667085; margin-bottom:8px;">Cash runway</div>
+        <div id="summaryRunway" style="font-size:28px; font-weight:700;">18 days</div>
+        <div style="margin-top:8px; color:#667085; font-size:14px;">Estimated from current inputs</div>
+      </div>
+
+      <div style="background:white; border-radius:16px; padding:22px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+        <div style="font-size:14px; color:#667085; margin-bottom:8px;">Overdue invoices</div>
+        <div id="summaryOverdue" style="font-size:28px; font-weight:700;">£8,200</div>
+        <div style="margin-top:8px; color:#667085; font-size:14px;">Across 3 invoices</div>
+      </div>
+
+      <div style="background:white; border-radius:16px; padding:22px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+        <div style="font-size:14px; color:#667085; margin-bottom:8px;">Selected to chase</div>
+        <div id="summarySelected" style="font-size:28px; font-weight:700;">£0</div>
+        <div id="summarySelectedCount" style="margin-top:8px; color:#667085; font-size:14px;">0 invoices selected</div>
+      </div>
+
+      <div style="background:white; border-radius:16px; padding:22px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+        <div style="font-size:14px; color:#667085; margin-bottom:8px;">Risk level</div>
+        <div id="summaryRisk" style="font-size:28px; font-weight:700;">Warning</div>
+        <div style="margin-top:8px; color:#667085; font-size:14px;">Based on runway calculation</div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:24px;">
+      
+      <!-- Left Column -->
+      <div style="display:flex; flex-direction:column; gap:24px;">
+
+        <!-- Cash Flow Panel -->
+        <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+            <div>
+              <h2 style="margin:0; font-size:22px;">Cash flow checker</h2>
+              <p style="margin:6px 0 0 0; color:#667085;">Estimate how long your cash will last.</p>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr; gap:14px;">
+            <input id="cash" type="number" placeholder="Current cash (£)" style="padding:14px; border:1px solid #dbe2ea; border-radius:10px; font-size:15px;">
+            <input id="incoming" type="number" placeholder="Expected incoming this month (£)" style="padding:14px; border:1px solid #dbe2ea; border-radius:10px; font-size:15px;">
+            <input id="expenses" type="number" placeholder="Monthly expenses (£)" style="padding:14px; border:1px solid #dbe2ea; border-radius:10px; font-size:15px;">
+          </div>
+
+          <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+            <button onclick="calculate()" style="padding:12px 18px; background:#111; color:white; border:none; border-radius:10px; cursor:pointer; font-size:15px;">
+              Check cash flow
+            </button>
+
+            <button onclick="loadExampleData()" style="padding:12px 18px; background:white; color:#111; border:1px solid #dbe2ea; border-radius:10px; cursor:pointer; font-size:15px;">
+              Load example
+            </button>
+          </div>
+
+          <div id="resultBox" style="margin-top:20px; display:none; text-align:left; padding:18px; border-radius:12px; background:#f4f6f8;">
+            <p id="result" style="margin:0 0 10px 0; font-size:22px; font-weight:700;"></p>
+            <p id="status" style="margin:0 0 10px 0; font-weight:600;"></p>
+            <p id="advice" style="margin:0; color:#555; line-height:1.5;"></p>
+          </div>
+        </div>
+
+        <!-- Action Centre -->
+        <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+          <h2 style="margin:0 0 8px 0; font-size:22px;">Recommended actions</h2>
+          <p style="margin:0 0 18px 0; color:#667085;">What Flow suggests you do next.</p>
+
+          <div style="display:grid; gap:14px;">
+            <div style="padding:16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd;">
+              <div style="font-weight:600; margin-bottom:6px;">Chase overdue invoices</div>
+              <div style="color:#667085; font-size:14px;">Recover cash tied up in late payments.</div>
+            </div>
+
+            <div style="padding:16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd;">
+              <div style="font-weight:600; margin-bottom:6px;">Review upcoming spend</div>
+              <div style="color:#667085; font-size:14px;">Delay non-essential costs if runway is tight.</div>
+            </div>
+
+            <div style="padding:16px; border:1px solid #edf1f5; border-radius:12px; background:#fafbfd;">
+              <div style="font-weight:600; margin-bottom:6px;">Connect accounting data</div>
+              <div style="color:#667085; font-size:14px;">Pull real invoices and cash data automatically.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div style="display:flex; flex-direction:column; gap:24px;">
+
+        <!-- Invoice Panel -->
+        <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:18px;">
+            <div>
+              <h2 style="margin:0; font-size:22px;">Overdue invoices</h2>
+              <p style="margin:6px 0 0 0; color:#667085;">Select invoices to chase.</p>
+            </div>
+          </div>
+
+          <div style="display:grid; gap:10px;">
+
+            <label style="display:flex; justify-content:space-between; align-items:center; padding:14px; border:1px solid #edf1f5; border-radius:12px; cursor:pointer; background:#fcfdff;">
+              <div style="display:flex; gap:12px; align-items:flex-start;">
+                <input type="checkbox" class="invoice-check" value="2400" onchange="updateSelectedSummary()">
+                <div>
+                  <div style="font-weight:600;">Acme Studio</div>
+                  <div style="font-size:14px; color:#667085;">Invoice #1024 • 14 days overdue</div>
+                </div>
+              </div>
+              <div style="font-weight:700;">£2,400</div>
+            </label>
+
+            <label style="display:flex; justify-content:space-between; align-items:center; padding:14px; border:1px solid #edf1f5; border-radius:12px; cursor:pointer; background:#fcfdff;">
+              <div style="display:flex; gap:12px; align-items:flex-start;">
+                <input type="checkbox" class="invoice-check" value="3100" onchange="updateSelectedSummary()">
+                <div>
+                  <div style="font-weight:600;">Northway Media</div>
+                  <div style="font-size:14px; color:#667085;">Invoice #1028 • 9 days overdue</div>
+                </div>
+              </div>
+              <div style="font-weight:700;">£3,100</div>
+            </label>
+
+            <label style="display:flex; justify-content:space-between; align-items:center; padding:14px; border:1px solid #edf1f5; border-radius:12px; cursor:pointer; background:#fcfdff;">
+              <div style="display:flex; gap:12px; align-items:flex-start;">
+                <input type="checkbox" class="invoice-check" value="2700" onchange="updateSelectedSummary()">
+                <div>
+                  <div style="font-weight:600;">Bright Lane</div>
+                  <div style="font-size:14px; color:#667085;">Invoice #1031 • 6 days overdue</div>
+                </div>
+              </div>
+              <div style="font-weight:700;">£2,700</div>
+            </label>
+
+          </div>
+
+          <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button onclick="sendSelectedReminders()" style="padding:12px 16px; background:#00c853; color:white; border:none; border-radius:10px; cursor:pointer;">
+              Send reminders
+            </button>
+
+            <button onclick="showSelectedTotal()" style="padding:12px 16px; background:#111; color:white; border:none; border-radius:10px; cursor:pointer;">
+              Show selected total
+            </button>
+
+            <button onclick="selectAllInvoices()" style="padding:12px 16px; background:white; color:#111; border:1px solid #dbe2ea; border-radius:10px; cursor:pointer;">
+              Select all
+            </button>
+
+            <button onclick="clearInvoices()" style="padding:12px 16px; background:white; color:#111; border:1px solid #dbe2ea; border-radius:10px; cursor:pointer;">
+              Clear
+            </button>
+          </div>
+
+          <div id="invoiceMessage" style="display:none; margin-top:18px; padding:16px; border-radius:12px; background:#eef7ff; color:#234;"></div>
+        </div>
+
+        <!-- Snapshot Panel -->
+        <div style="background:white; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(16,24,40,0.06);">
+          <h2 style="margin:0 0 8px 0; font-size:22px;">Cash snapshot</h2>
+          <p style="margin:0 0 18px 0; color:#667085;">A simple view of your current position.</p>
+
+          <div style="display:grid; gap:14px;">
+            <div style="display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid #edf1f5;">
+              <span style="color:#667085;">Current cash</span>
+              <strong id="snapshotCash">£0</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid #edf1f5;">
+              <span style="color:#667085;">Expected incoming</span>
+              <strong id="snapshotIncoming">£0</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid #edf1f5;">
+              <span style="color:#667085;">Monthly expenses</span>
+              <strong id="snapshotExpenses">£0</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:14px 0;">
+              <span style="color:#667085;">Estimated runway</span>
+              <strong id="snapshotRunway">18 days</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <script>
+    function formatMoney(amount) {
+      return "£" + Number(amount).toLocaleString();
+    }
+
+    function connectXero() {
+      const box = document.getElementById('xeroMessage');
+      box.style.display = 'block';
+      box.innerText = "Demo mode: Xero connection coming soon. In the full product, Flow will pull unpaid invoices and cash data automatically.";
+    }
+
+    function loadExampleData() {
+      document.getElementById('cash').value = 5000;
+      document.getElementById('incoming').value = 3000;
+      document.getElementById('expenses').value = 4000;
+      calculate();
+    }
+
     function calculate() {
       const cash = parseFloat(document.getElementById('cash').value) || 0;
       const incoming = parseFloat(document.getElementById('incoming').value) || 0;
@@ -239,19 +268,31 @@
       resultBox.style.display = 'block';
       result.innerText = "You will run out of cash in " + days + " days";
 
+      let risk = "Healthy";
+
       if (days <= 14) {
         resultBox.style.background = '#ffe5e5';
         status.innerText = "High risk";
         advice.innerText = "You may need to act now. Chase overdue invoices, reduce non-essential spending, and review upcoming payments.";
+        risk = "High risk";
       } else if (days <= 30) {
         resultBox.style.background = '#fff4e5';
         status.innerText = "Warning";
         advice.innerText = "You should keep a close eye on cash. Consider chasing invoices and reducing flexible costs this month.";
+        risk = "Warning";
       } else {
         resultBox.style.background = '#e8f7ee';
         status.innerText = "Healthy";
         advice.innerText = "Your current position looks okay for now. Keep monitoring invoices and stay ahead of future shortfalls.";
+        risk = "Healthy";
       }
+
+      document.getElementById('summaryRunway').innerText = days + " days";
+      document.getElementById('summaryRisk').innerText = risk;
+      document.getElementById('snapshotCash').innerText = formatMoney(cash);
+      document.getElementById('snapshotIncoming').innerText = formatMoney(incoming);
+      document.getElementById('snapshotExpenses').innerText = formatMoney(expenses);
+      document.getElementById('snapshotRunway').innerText = days + " days";
     }
 
     function getSelectedInvoices() {
@@ -267,8 +308,10 @@
       return { total, count };
     }
 
-    function formatMoney(amount) {
-      return "£" + amount.toLocaleString();
+    function updateSelectedSummary() {
+      const selected = getSelectedInvoices();
+      document.getElementById('summarySelected').innerText = formatMoney(selected.total);
+      document.getElementById('summarySelectedCount').innerText = selected.count + " invoice" + (selected.count === 1 ? "" : "s") + " selected";
     }
 
     function sendSelectedReminders() {
@@ -308,6 +351,7 @@
       checks.forEach((check) => {
         check.checked = true;
       });
+      updateSelectedSummary();
 
       const box = document.getElementById('invoiceMessage');
       box.style.display = 'block';
@@ -320,6 +364,7 @@
       checks.forEach((check) => {
         check.checked = false;
       });
+      updateSelectedSummary();
 
       const box = document.getElementById('invoiceMessage');
       box.style.display = 'block';
@@ -327,11 +372,7 @@
       box.innerText = "Invoice selection cleared.";
     }
 
-    function connectXero() {
-      const box = document.getElementById('xeroMessage');
-      box.style.display = 'block';
-      box.innerText = "Demo mode: Xero connection coming soon. In the full product, Flow will pull unpaid invoices and cash data automatically.";
-    }
+    updateSelectedSummary();
   </script>
 
 </body>
